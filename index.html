@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assistente de Orações</title>
+    <!-- Biblioteca leve e robusta para processar o CSV sem quebrar URLs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -135,107 +137,113 @@
 </footer>
 
 <script>
-    // Cole aqui o link obtido ao "Publicar na Web" como CSV na planilha
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRUImoAtZ4E2g_fLMqCTh4lxQyAOLaHidHq6yIITwLOHL2s1TROu866CksJmtWvrFLnGrWHbCzKMiY4/pub?gid=0&single=true&output=csv';
 
-    // Bloco do anúncio Adsterra
-    const adTemplate = `
-        <div class="ad-slot">
-            <script type="text/javascript">
-                atOptions = {
-                    'key' : 'f95477b41aad412b789767be6416723b',
-                    'format' : 'iframe',
-                    'height' : 50,
-                    'width' : 320,
-                    'params' : {}
-                };
-            <\/script>
-            <script type="text/javascript" src="https://www.highperformanceformat.com/f95477b41aad412b789767be6416723b/invoke.js"><\/script>
-        </div>
-    `;
-
-    function buscar(titulo, periodo) {
+    function buscar(termo, periodo) {
         const data = new Date();
         if (periodo === 'ontem') data.setDate(data.getDate() - 1);
         const dia = String(data.getDate()).padStart(2, '0');
         const mes = String(data.getMonth() + 1).padStart(2, '0');
         const ano = data.getFullYear();
         const dataFormatada = `${dia}/${mes}/${ano}`;
-        const termoBusca = `${titulo} ${dataFormatada}`;
+        const termoBusca = `${termo} ${dataFormatada}`;
         const urlYoutube = `https://www.youtube.com/results?search_query=${encodeURIComponent(termoBusca)}`;
         window.open(urlYoutube, '_blank');
     }
 
-    // Leitor de formato CSV para converter a planilha em objetos do JS
-    function parseCSV(text) {
-        const lines = text.trim().split(/\r\n|\n/);
-        if (lines.length < 2) return [];
+    // Função para criar o elemento de anúncio e forçar a execução do script
+    function criarSlotAnuncio() {
+        const div = document.createElement('div');
+        div.className = 'ad-slot';
 
-        const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
-        const result = [];
+        const scriptConfig = document.createElement('script');
+        scriptConfig.type = 'text/javascript';
+        scriptConfig.text = `
+            atOptions = {
+                'key' : 'f95477b41aad412b789767be6416723b',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+            };
+        `;
 
-        for (let i = 1; i < lines.length; i++) {
-            if (!lines[i].trim()) continue;
-            
-            // Separa por vírgula respeitando campos com aspas
-            const values = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || lines[i].split(',');
-            const obj = {};
-            
-            headers.forEach((header, index) => {
-                let val = values[index] ? values[index].trim() : '';
-                val = val.replace(/^"|"$/g, ''); // Remove aspas extras
-                obj[header] = val;
-            });
-            result.push(obj);
-        }
-        return result;
+        const scriptInvoke = document.createElement('script');
+        scriptInvoke.type = 'text/javascript';
+        scriptInvoke.src = 'https://www.highperformanceformat.com/f95477b41aad412b789767be6416723b/invoke.js';
+
+        div.appendChild(scriptConfig);
+        div.appendChild(scriptInvoke);
+        return div;
     }
 
     async function carregarCards() {
         const container = document.getElementById('cards-container');
-        try {
-            const response = await fetch(CSV_URL);
-            const csvText = await response.text();
-            const itens = parseCSV(csvText);
+        
+        Papa.parse(CSV_URL, {
+            download: true,
+            header: true,
+            skipEmptyLines: true,
+            complete: function(results) {
+                const itens = results.data;
+                container.innerHTML = ''; // Limpa a mensagem de carregamento
 
-            if (itens.length === 0) {
-                container.innerHTML = '<p style="text-align:center;">Nenhum card encontrado na planilha.</p>';
-                return;
-            }
-
-            let htmlContent = adTemplate; // Adiciona o primeiro anúncio no topo
-
-            itens.forEach((item) => {
-                let botoesHTML = '';
-
-                if (item.tipo && item.tipo.toLowerCase() === 'unico') {
-                    botoesHTML = `<button class="btn-unico" onclick="window.open('${item.link_ou_termo}', '_blank')">Acessar Agora</button>`;
-                } else {
-                    botoesHTML = `
-                        <button class="btn-hoje" onclick="buscar('${item.link_ou_termo}', 'hoje')">Hoje</button>
-                        <button class="btn-ontem" onclick="buscar('${item.link_ou_termo}', 'ontem')">Ontem</button>
-                    `;
+                if (!itens || itens.length === 0) {
+                    container.innerHTML = '<p style="text-align:center;">Nenhum card encontrado na planilha.</p>';
+                    return;
                 }
 
-                htmlContent += `
-                    <div class="card">
-                        <img src="${item.imagem}" class="card-img" alt="${item.titulo}">
+                // Insere anúncio inicial
+                container.appendChild(criarSlotAnuncio());
+
+                itens.forEach((item) => {
+                    const titulo = item.titulo || item.TITULO || '';
+                    const imagem = item.imagem || item.IMAGEM || '';
+                    const tipo = (item.tipo || item.TIPO || '').trim().toLowerCase();
+                    const linkOuTermo = item.link_ou_termo || item.LINK_OU_TERMO || '';
+
+                    if (!titulo) return; // ignora linhas em branco
+
+                    const card = document.createElement('div');
+                    card.className = 'card';
+
+                    let buttonsDivHTML = '';
+                    if (tipo === 'unico') {
+                        buttonsDivHTML = `<button class="btn-unico">Acessar Agora</button>`;
+                    } else {
+                        buttonsDivHTML = `
+                            <button class="btn-hoje">Hoje</button>
+                            <button class="btn-ontem">Ontem</button>
+                        `;
+                    }
+
+                    card.innerHTML = `
+                        <img src="${imagem}" class="card-img" alt="${titulo}">
                         <div class="card-content">
-                            <h3>${item.titulo}</h3>
+                            <h3>${titulo}</h3>
                             <div class="buttons">
-                                ${botoesHTML}
+                                ${buttonsDivHTML}
                             </div>
                         </div>
-                    </div>
-                    ${adTemplate}
-                `;
-            });
+                    `;
 
-            container.innerHTML = htmlContent;
-        } catch (erro) {
-            console.error('Erro ao carregar os dados da planilha:', erro);
-            container.innerHTML = '<p style="text-align:center; color:red;">Não foi possível carregar o conteúdo. Verifique o link da planilha no código.</p>';
-        }
+                    // Atribuição de eventos nos botões para evitar problemas com caracteres em onclick
+                    if (tipo === 'unico') {
+                        card.querySelector('.btn-unico').onclick = () => window.open(linkOuTermo, '_blank');
+                    } else {
+                        card.querySelector('.btn-hoje').onclick = () => buscar(linkOuTermo, 'hoje');
+                        card.querySelector('.btn-ontem').onclick = () => buscar(linkOuTermo, 'ontem');
+                    }
+
+                    container.appendChild(card);
+                    container.appendChild(criarSlotAnuncio());
+                });
+            },
+            error: function(err) {
+                console.error('Erro ao ler CSV:', err);
+                container.innerHTML = '<p style="text-align:center; color:red;">Erro ao carregar dados da planilha. Verifique as permissões de publicação do link.</p>';
+            }
+        });
     }
 
     carregarCards();
