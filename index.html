@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assistente de Orações</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            color: #2c3e50;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #d4af37;
+            padding-bottom: 10px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        header h1 {
+            color: #003366;
+            margin: 0;
+            font-variant: small-caps;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden; /* Para a imagem respeitar a borda arredondada */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-left: 5px solid #003366;
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Estilo da Imagem */
+        .card-img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover; /* Faz a imagem preencher o espaço sem distorcer */
+            border-bottom: 1px solid #eee;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: #003366;
+            font-size: 1.2rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .btn-hoje { background-color: #003366; color: white; }
+        .btn-ontem { background-color: #d4af37; color: white; }
+        .btn-unico { background-color: #2c3e50; color: white; }
+
+        button:hover {
+            filter: brightness(1.2);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        /* Estilo para centralizar os anúncios do Adsterra */
+        .ad-slot {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 0;
+            min-height: 50px; /* Garante o espaço mesmo antes de carregar */
+        }
+        
+        footer {
+            margin-top: 40px;
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Canais de Oração</h1>
+    <p>Assista às celebrações do dia</p>
+</header>
+
+<div class="container">
+    <div class="ad-slot">
+        <script type="text/javascript">
+            atOptions = {
+                'key' : 'f95477b41aad412b789767be6416723b',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="https://www.highperformanceformat.com/f95477b41aad412b789767be6416723b/invoke.js"></script>
+    </div>
+    <div class="card">
+        <img src="https://i.ytimg.com/vi/mnMYOSOJGMY/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLAFFdWQd_vsrYozTDzekTZt6zHzRQ" class="card-img" alt="Ofício">
+        <div class="card-content">
+            <h3>Ofício da Imaculada Conceição</h3>
+            <div class="buttons">
+                <button class="btn-unico" onclick="window.open('https://www.youtube.com/watch?v=zFlmusvfJIY&list=RDzFlmusvfJIY', '_blank')">Acessar Agora</button>
+            </div>
+        </div>
+    </div>
+    <div class="ad-slot">
+        <script type="text/javascript">
+            atOptions = {
+                'key' : 'f95477b41aad412b789767be6416723b',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="https://www.highperformanceformat.com/f95477b41aad412b789767be6416723b/invoke.js"></script>
+    </div>
+
+    <div class="card">
+        <img src="https://images.a12.com/source/files/c/287504/Padre_Antonio_Maria_Terco-893342_2048-1364-0-0.jpg" class="card-img" alt="Terço">
+        <div class="card-content">
+            <h3>Terço de Aparecida - Pe. Antônio Maria</h3>
+            <div class="buttons">
+                <button class="btn-hoje" onclick="buscar('Terço de Aparecida Pe. Antônio Maria', 'hoje')">Hoje</button>
+                <button class="btn-ontem" onclick="buscar('Terço de Aparecida Pe. Antônio Maria', 'ontem')">Ontem</button>
+            </div>
+        </div>
+    </div>
+    <div class="ad-slot">
+        <script type="text/javascript">
+            atOptions = {
+                'key' : 'f95477b41aad412b789767be6416723b',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="https://www.highperformanceformat.com/f95477b41aad412b789767be6416723b/invoke.js"></script>
+    </div>
+
+    <div class="card">
+        <img src="https://redevida.com.br/wp-content/uploads/2024/08/missa-de-aparecida_407x305.jpg?q=80&w=500" class="card-img" alt="Missa">
+        <div class="card-content">
+            <h3>Missa de Aparecida</h3>
+            <div class="buttons">
+                <button class="btn-hoje" onclick="buscar('Missa de Aparecida TV Aparecida', 'hoje')">Hoje</button>
+                <button class="btn-ontem" onclick="buscar('Missa de Aparecida TV Aparecida', 'ontem')">Ontem</button>
+            </div>
+        </div>
+    </div>
+    <div class="ad-slot">
+        <script type="text/javascript">
+            atOptions = {
+                'key' : 'f95477b41aad412b789767be6416723b',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="https://www.highperformanceformat.com/f95477b41aad412b789767be6416723b/invoke.js"></script>
+    </div>
+
+    <div class="card">
+        <img src="https://i.ytimg.com/vi/8JVX7P0HM7M/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLARm8AOs5-VvhIhuxdBXOAPw6bkTg?q=80&w=500" class="card-img" alt="Missa">
+        <div class="card-content">
+            <h3>Santa Missa - alternativas</h3>
+            <div class="buttons">
+                <button class="btn-hoje" onclick="buscar('Santa Missa', 'hoje')">Hoje</button>
+                <button class="btn-ontem" onclick="buscar('Santa Missa', 'ontem')">Ontem</button>
+            </div>
+        </div>
+    </div>
+    <div class="ad-slot">
+        <script type="text/javascript">
+            atOptions = {
+                'key' : 'f95477b41aad412b789767be6416723b',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="https://www.highperformanceformat.com/f95477b41aad412b789767be6416723b/invoke.js"></script>
+    </div>
+    
+</div>
+
+<footer>
+    <p>Que a paz de Cristo esteja com você.</p>
+</footer>
+
+<script>
+    function buscar(titulo, periodo) {
+        const data = new Date();
+        if (periodo === 'ontem') data.setDate(data.getDate() - 1);
+        const dia = String(data.getDate()).padStart(2, '0');
+        const mes = String(data.getMonth() + 1).padStart(2, '0');
+        const ano = data.getFullYear();
+        const dataFormatada = `${dia}/${mes}/${ano}`;
+        const termoBusca = `${titulo} ${dataFormatada}`;
+        const urlYoutube = `https://www.youtube.com/results?search_query=${encodeURIComponent(termoBusca)}`;
+        window.open(urlYoutube, '_blank');
+    }
+</script>
+
+</body>
+</html>
