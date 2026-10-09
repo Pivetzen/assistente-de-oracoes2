@@ -42,7 +42,7 @@
         .card {
             background: white;
             border-radius: 12px;
-            overflow: hidden; /* Para a imagem respeitar a borda arredondada */
+            overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             border-left: 5px solid #003366;
             transition: transform 0.2s;
@@ -50,11 +50,10 @@
             flex-direction: column;
         }
 
-        /* Estilo da Imagem */
         .card-img {
             width: 100%;
             height: 150px;
-            object-fit: cover; /* Faz a imagem preencher o espaço sem distorcer */
+            object-fit: cover;
             border-bottom: 1px solid #eee;
         }
 
@@ -102,14 +101,14 @@
             filter: brightness(1.2);
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
-        /* Estilo para centralizar os anúncios do Adsterra */
+
         .ad-slot {
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 10px 0;
-            min-height: 50px; /* Garante o espaço mesmo antes de carregar */
+            min-height: 50px;
         }
         
         footer {
@@ -127,110 +126,8 @@
     <p>Assista às celebrações do dia</p>
 </header>
 
-<div class="container">
-    <div class="ad-slot">
-        <script type="text/javascript">
-            atOptions = {
-                'key' : 'f95477b41aad412b789767be6416723b',
-                'format' : 'iframe',
-                'height' : 50,
-                'width' : 320,
-                'params' : {}
-            };
-        </script>
-        <script type="text/javascript" src="https://www.highperformanceformat.com/f95477b41aad412b789767be6416723b/invoke.js"></script>
-    </div>
-    <div class="card">
-        <img src="https://i.ytimg.com/vi/mnMYOSOJGMY/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLAFFdWQd_vsrYozTDzekTZt6zHzRQ" class="card-img" alt="Ofício">
-        <div class="card-content">
-            <h3>Ofício da Imaculada Conceição</h3>
-            <div class="buttons">
-                <button class="btn-unico" onclick="window.open('https://www.youtube.com/watch?v=zFlmusvfJIY&list=RDzFlmusvfJIY', '_blank')">Acessar Agora</button>
-            </div>
-        </div>
-    </div>
-    <div class="ad-slot">
-        <script type="text/javascript">
-            atOptions = {
-                'key' : 'f95477b41aad412b789767be6416723b',
-                'format' : 'iframe',
-                'height' : 50,
-                'width' : 320,
-                'params' : {}
-            };
-        </script>
-        <script type="text/javascript" src="https://www.highperformanceformat.com/f95477b41aad412b789767be6416723b/invoke.js"></script>
-    </div>
-
-    <div class="card">
-        <img src="https://images.a12.com/source/files/c/287504/Padre_Antonio_Maria_Terco-893342_2048-1364-0-0.jpg" class="card-img" alt="Terço">
-        <div class="card-content">
-            <h3>Terço de Aparecida - Pe. Antônio Maria</h3>
-            <div class="buttons">
-                <button class="btn-hoje" onclick="buscar('Terço de Aparecida Pe. Antônio Maria', 'hoje')">Hoje</button>
-                <button class="btn-ontem" onclick="buscar('Terço de Aparecida Pe. Antônio Maria', 'ontem')">Ontem</button>
-            </div>
-        </div>
-    </div>
-    <div class="ad-slot">
-        <script type="text/javascript">
-            atOptions = {
-                'key' : 'f95477b41aad412b789767be6416723b',
-                'format' : 'iframe',
-                'height' : 50,
-                'width' : 320,
-                'params' : {}
-            };
-        </script>
-        <script type="text/javascript" src="https://www.highperformanceformat.com/f95477b41aad412b789767be6416723b/invoke.js"></script>
-    </div>
-
-    <div class="card">
-        <img src="https://redevida.com.br/wp-content/uploads/2024/08/missa-de-aparecida_407x305.jpg?q=80&w=500" class="card-img" alt="Missa">
-        <div class="card-content">
-            <h3>Missa de Aparecida</h3>
-            <div class="buttons">
-                <button class="btn-hoje" onclick="buscar('Missa de Aparecida TV Aparecida', 'hoje')">Hoje</button>
-                <button class="btn-ontem" onclick="buscar('Missa de Aparecida TV Aparecida', 'ontem')">Ontem</button>
-            </div>
-        </div>
-    </div>
-    <div class="ad-slot">
-        <script type="text/javascript">
-            atOptions = {
-                'key' : 'f95477b41aad412b789767be6416723b',
-                'format' : 'iframe',
-                'height' : 50,
-                'width' : 320,
-                'params' : {}
-            };
-        </script>
-        <script type="text/javascript" src="https://www.highperformanceformat.com/f95477b41aad412b789767be6416723b/invoke.js"></script>
-    </div>
-
-    <div class="card">
-        <img src="https://i.ytimg.com/vi/8JVX7P0HM7M/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLARm8AOs5-VvhIhuxdBXOAPw6bkTg?q=80&w=500" class="card-img" alt="Missa">
-        <div class="card-content">
-            <h3>Santa Missa - alternativas</h3>
-            <div class="buttons">
-                <button class="btn-hoje" onclick="buscar('Santa Missa', 'hoje')">Hoje</button>
-                <button class="btn-ontem" onclick="buscar('Santa Missa', 'ontem')">Ontem</button>
-            </div>
-        </div>
-    </div>
-    <div class="ad-slot">
-        <script type="text/javascript">
-            atOptions = {
-                'key' : 'f95477b41aad412b789767be6416723b',
-                'format' : 'iframe',
-                'height' : 50,
-                'width' : 320,
-                'params' : {}
-            };
-        </script>
-        <script type="text/javascript" src="https://www.highperformanceformat.com/f95477b41aad412b789767be6416723b/invoke.js"></script>
-    </div>
-    
+<div class="container" id="cards-container">
+    <p style="text-align: center;">Carregando orações...</p>
 </div>
 
 <footer>
@@ -238,6 +135,25 @@
 </footer>
 
 <script>
+    // Cole aqui o link obtido ao "Publicar na Web" como CSV na planilha
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRUImoAtZ4E2g_fLMqCTh4lxQyAOLaHidHq6yIITwLOHL2s1TROu866CksJmtWvrFLnGrWHbCzKMiY4/pub?gid=0&single=true&output=csv';
+
+    // Bloco do anúncio Adsterra
+    const adTemplate = `
+        <div class="ad-slot">
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : 'f95477b41aad412b789767be6416723b',
+                    'format' : 'iframe',
+                    'height' : 50,
+                    'width' : 320,
+                    'params' : {}
+                };
+            <\/script>
+            <script type="text/javascript" src="https://www.highperformanceformat.com/f95477b41aad412b789767be6416723b/invoke.js"><\/script>
+        </div>
+    `;
+
     function buscar(titulo, periodo) {
         const data = new Date();
         if (periodo === 'ontem') data.setDate(data.getDate() - 1);
@@ -249,6 +165,80 @@
         const urlYoutube = `https://www.youtube.com/results?search_query=${encodeURIComponent(termoBusca)}`;
         window.open(urlYoutube, '_blank');
     }
+
+    // Leitor de formato CSV para converter a planilha em objetos do JS
+    function parseCSV(text) {
+        const lines = text.trim().split(/\r\n|\n/);
+        if (lines.length < 2) return [];
+
+        const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+        const result = [];
+
+        for (let i = 1; i < lines.length; i++) {
+            if (!lines[i].trim()) continue;
+            
+            // Separa por vírgula respeitando campos com aspas
+            const values = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || lines[i].split(',');
+            const obj = {};
+            
+            headers.forEach((header, index) => {
+                let val = values[index] ? values[index].trim() : '';
+                val = val.replace(/^"|"$/g, ''); // Remove aspas extras
+                obj[header] = val;
+            });
+            result.push(obj);
+        }
+        return result;
+    }
+
+    async function carregarCards() {
+        const container = document.getElementById('cards-container');
+        try {
+            const response = await fetch(CSV_URL);
+            const csvText = await response.text();
+            const itens = parseCSV(csvText);
+
+            if (itens.length === 0) {
+                container.innerHTML = '<p style="text-align:center;">Nenhum card encontrado na planilha.</p>';
+                return;
+            }
+
+            let htmlContent = adTemplate; // Adiciona o primeiro anúncio no topo
+
+            itens.forEach((item) => {
+                let botoesHTML = '';
+
+                if (item.tipo && item.tipo.toLowerCase() === 'unico') {
+                    botoesHTML = `<button class="btn-unico" onclick="window.open('${item.link_ou_termo}', '_blank')">Acessar Agora</button>`;
+                } else {
+                    botoesHTML = `
+                        <button class="btn-hoje" onclick="buscar('${item.link_ou_termo}', 'hoje')">Hoje</button>
+                        <button class="btn-ontem" onclick="buscar('${item.link_ou_termo}', 'ontem')">Ontem</button>
+                    `;
+                }
+
+                htmlContent += `
+                    <div class="card">
+                        <img src="${item.imagem}" class="card-img" alt="${item.titulo}">
+                        <div class="card-content">
+                            <h3>${item.titulo}</h3>
+                            <div class="buttons">
+                                ${botoesHTML}
+                            </div>
+                        </div>
+                    </div>
+                    ${adTemplate}
+                `;
+            });
+
+            container.innerHTML = htmlContent;
+        } catch (erro) {
+            console.error('Erro ao carregar os dados da planilha:', erro);
+            container.innerHTML = '<p style="text-align:center; color:red;">Não foi possível carregar o conteúdo. Verifique o link da planilha no código.</p>';
+        }
+    }
+
+    carregarCards();
 </script>
 
 </body>
