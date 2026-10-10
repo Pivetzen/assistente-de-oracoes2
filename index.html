@@ -6,6 +6,8 @@
     <title>Assistente de Orações</title>
     <!-- Biblioteca leve e robusta para processar o CSV sem quebrar URLs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <!-- Ícones FontAwesome para os botões -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -16,6 +18,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
         }
 
         header {
@@ -68,6 +71,8 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
+            flex-grow: 1;
+            margin-bottom: 160px; /* Espaço para o rodapé fixo */
         }
 
         .card {
@@ -142,22 +147,22 @@
             min-height: 50px;
         }
         
-        /* Botão Fale Conosco / WhatsApp */
+        /* Botão Fale Conosco / WhatsApp (Flutuante Acima do Rodapé) */
         .whatsapp-float {
             position: fixed;
-            bottom: 20px;
+            bottom: 150px;
             right: 20px;
             background-color: #25d366;
             color: white;
             border-radius: 50px;
-            padding: 12px 20px;
+            padding: 10px 18px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             text-decoration: none;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             z-index: 1000;
             transition: all 0.3s ease;
         }
@@ -169,17 +174,35 @@
         }
 
         .whatsapp-float svg {
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             fill: white;
         }
 
+        /* Rodapé Fixo com Doação Pix */
         footer {
-            margin-top: 40px;
-            margin-bottom: 60px;
-            font-size: 0.8rem;
-            color: #7f8c8d;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            padding: 10px 0;
             text-align: center;
+            font-size: 0.8rem;
+            color: #64748b;
+            z-index: 900;
+            box-shadow: 0 -4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .pix-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
         }
     </style>
 </head>
@@ -204,13 +227,35 @@
     Fale Conosco
 </a>
 
+<!-- RODAPÉ FIXO COM DOAÇÃO PIX -->
 <footer>
-    <p>Que a paz de Cristo esteja com você.</p>
+    <div class="pix-container mx-3 sm:mx-auto mb-1">
+        <p class="font-semibold text-slate-800 mb-0.5 flex items-center justify-center gap-1 text-xs sm:text-sm">
+            <i class="fa-solid fa-heart text-red-500"></i> Gostou do app? Apoie o projeto!
+        </p>
+        <p class="text-[10px] text-slate-500 mb-2">Sua doação ajuda a manter a ferramenta online e sem mensalidades.</p>
+        
+        <div class="flex items-center gap-2">
+            <input type="text" id="inputValorDoacao" value="R$ 0,00" oninput="mascaraMoeda(this)" class="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-semibold text-slate-800 text-center focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
+            <button onclick="gerarECopiarPixDoacao()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-4 py-1.5 rounded-lg text-sm transition flex items-center gap-1.5 cursor-pointer shadow-sm shrink-0 uppercase tracking-wide">
+                <i class="fa-regular fa-copy"></i> Copiar Pix
+            </button>
+        </div>
+        <p id="msgSucessoPix" class="text-[11px] text-emerald-600 font-semibold mt-1.5 hidden">
+            <i class="fa-solid fa-check-circle"></i> Código Pix Copia e Cola copiado! Abra seu banco para pagar.
+        </p>
+    </div>
+    <p class="text-[10px] text-slate-400 mt-1">Assistente de Orações © 2026 - Todos os direitos reservados</p>
 </footer>
 
 <script>
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRUImoAtZ4E2g_fLMqCTh4lxQyAOLaHidHq6yIITwLOHL2s1TROu866CksJmtWvrFLnGrWHbCzKMiY4/pub?gid=0&single=true&output=csv';
     
+    // Configurações da Chave Pix de Doação
+    const CHAVE_PIX_RECEPTOR = "matheuzzu@hotmail.com";
+    const NOME_RECEPTOR = "MATHEUS ARRUDA MAIA";
+    const CIDADE_RECEPTOR = "FORTALEZA";
+
     let todosItens = [];
 
     function buscar(termo, periodo) {
@@ -270,7 +315,7 @@
             const linkOuTermo = item.link_ou_termo || item.LINK_OU_TERMO || '';
             const ativoVal = (item.ativo || item.ATIVO || '').trim().toLowerCase();
 
-            // Se a coluna 'ativo' estiver preenchida como falso/FALSE/não, oculta o card
+            // Se a coluna 'ativo' estiver preenchida como falso, false, não ou 0, oculta o card
             if (ativoVal === 'falso' || ativoVal === 'false' || ativoVal === 'não' || ativoVal === 'nao' || ativoVal === '0') {
                 return;
             }
@@ -343,6 +388,95 @@
                 container.innerHTML = '<p style="text-align:center; color:red;">Erro ao carregar dados da planilha. Verifique as permissões de publicação do link.</p>';
             }
         });
+    }
+
+    // Gerador de Payload Pix Copia e Cola
+    function gerarPayloadPix(chave, nome, cidade, valor, txid = "***") {
+        function formatField(id, value) {
+            const len = value.length.toString().padStart(2, '0');
+            return `${id}${len}${value}`;
+        }
+
+        const gui = formatField('00', 'br.gov.bcb.pix');
+        const key = formatField('01', chave);
+        const merchantAccount = formatField('26', `${gui}${key}`);
+        
+        const categoryCode = formatField('52', '0000');
+        const currency = formatField('53', '986'); // BRL
+        const amountStr = parseFloat(valor).toFixed(2);
+        const amount = formatField('54', amountStr);
+        const country = formatField('58', 'BR');
+        const name = formatField('59', nome.substring(0, 25));
+        const city = formatField('60', cidade.substring(0, 15));
+        const additionalData = formatField('62', formatField('05', txid));
+
+        let payload = `000201${merchantAccount}${categoryCode}${currency}${amount}${country}${name}${city}${additionalData}6304`;
+        
+        function crc16(str) {
+            let crc = 0xFFFF;
+            for (let i = 0; i < str.length; i++) {
+                crc ^= str.charCodeAt(i) << 8;
+                for (let j = 0; j < 8; j++) {
+                    if ((crc & 0x8000) !== 0) {
+                        crc = (crc << 1) ^ 0x1021;
+                    } else {
+                        crc = crc << 1;
+                    }
+                }
+            }
+            return (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+        }
+
+        return payload + crc16(payload);
+    }
+
+    function gerarECopiarPixDoacao() {
+        const inputElement = document.getElementById('inputValorDoacao');
+        let rawDigits = inputElement.value.replace(/\D/g, "");
+        
+        if (!rawDigits || rawDigits === "00") {
+            alert('Por favor, informe um valor de doação válido.');
+            return;
+        }
+
+        const valor = parseFloat(rawDigits) / 100;
+
+        if (isNaN(valor) || valor <= 0) {
+            alert('Por favor, informe um valor de doação válido.');
+            return;
+        }
+
+        const pixPayload = gerarPayloadPix(CHAVE_PIX_RECEPTOR, NOME_RECEPTOR, CIDADE_RECEPTOR, valor);
+
+        navigator.clipboard.writeText(pixPayload).then(() => {
+            const msg = document.getElementById('msgSucessoPix');
+            if (msg) {
+                msg.classList.remove('hidden');
+                setTimeout(() => {
+                    msg.classList.add('hidden');
+                }, 5000);
+            }
+        }).catch(err => {
+            alert('Não foi possível copiar automaticamente. Tente novamente.');
+        });
+    }
+
+    // Máscara monetária acumulativa para o input de doação
+    function mascaraMoeda(input) {
+        let value = input.value.replace(/\D/g, "");
+        
+        if (!value || value === "00") {
+            input.value = "R$ 0,00";
+            return;
+        }
+        
+        let numberValue = (parseInt(value, 10) / 100).toFixed(2);
+        
+        let formatted = numberValue
+            .replace(".", ",")
+            .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+    
+        input.value = "R$ " + formatted;
     }
 
     carregarCards();
