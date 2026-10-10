@@ -203,10 +203,10 @@
     Fale Conosco
 </a>
 
-<!-- RODAPÉ FIXO EXATO DO APP CONTINHA[cite: 3] -->
+<!-- RODAPÉ FIXO EXATO DO APP CONTINHA -->
 <footer class="fixed bottom-0 left-0 w-full bg-slate-100 border-t border-slate-300 py-3 text-center text-xs text-slate-600 z-40 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
     
-    <!-- SEÇÃO DE DOAÇÃO VIA PIX[cite: 3] -->
+    <!-- SEÇÃO DE DOAÇÃO VIA PIX -->
     <div class="max-w-md mx-auto px-4 py-2.5 bg-white rounded-xl shadow-sm border border-slate-300 mb-1 mx-4 sm:mx-auto">
         <p class="font-semibold text-slate-800 mb-0.5 flex items-center justify-center gap-1">
             <i class="fa-solid fa-heart text-red-500"></i> Gostou do app? Apoie o projeto!
@@ -217,7 +217,8 @@
             <div class="relative flex-grow">
                 <input type="text" id="inputValorDoacao" value="Digite um valor..." oninput="mascaraMoeda(this)" class="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-semibold text-slate-800 text-center focus:outline-none focus:ring-2 focus:ring-emerald-500">
             </div>
-            <button onclick="gerarECopiarPixDoacao()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-4 py-1.5 rounded-lg text-sm transition flex items-center gap-1.5 cursor-pointer shadow-sm shrink-0">
+            <!-- Botão com fonte ajustada (text-xs) para garantir linha única -->
+            <button onclick="gerarECopiarPixDoacao()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-3.5 py-2 rounded-lg text-xs transition flex items-center justify-center gap-1 cursor-pointer shadow-sm shrink-0 whitespace-nowrap">
                 <i class="fa-regular fa-copy"></i> Copiar Pix
             </button>
         </div>
