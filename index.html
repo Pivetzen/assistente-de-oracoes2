@@ -72,7 +72,7 @@
             flex-direction: column;
             gap: 20px;
             flex-grow: 1;
-            margin-bottom: 160px; /* Espaço para o rodapé fixo */
+            margin-bottom: 180px; /* Espaço suficiente para o rodapé fixo maior */
         }
 
         .card {
@@ -147,10 +147,10 @@
             min-height: 50px;
         }
         
-        /* Botão Fale Conosco / WhatsApp (Flutuante Acima do Rodapé) */
+        /* Botão Fale Conosco / WhatsApp Posicionado acima do rodapé */
         .whatsapp-float {
             position: fixed;
-            bottom: 150px;
+            bottom: 165px;
             right: 20px;
             background-color: #25d366;
             color: white;
@@ -179,29 +179,29 @@
             fill: white;
         }
 
-        /* Rodapé Fixo com Doação Pix */
+        /* Rodapé Fixo com Doação Pix limpo e elegante */
         footer {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            background-color: #f8fafc;
+            background-color: #ffffff;
             border-top: 1px solid #e2e8f0;
-            padding: 10px 0;
+            padding: 12px 10px;
             text-align: center;
             font-size: 0.8rem;
             color: #64748b;
             z-index: 900;
-            box-shadow: 0 -4px 6px -1px rgba(0,0,0,0.05);
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.06);
         }
 
         .pix-container {
-            max-width: 500px;
+            max-width: 520px;
             margin: 0 auto;
-            padding: 8px 12px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 12px 16px;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
             border: 1px solid #e2e8f0;
         }
     </style>
@@ -227,17 +227,17 @@
     Fale Conosco
 </a>
 
-<!-- RODAPÉ FIXO COM DOAÇÃO PIX -->
+<!-- RODAPÉ FIXO COM DOAÇÃO PIX REESTRUTURADO -->
 <footer>
     <div class="pix-container mx-3 sm:mx-auto mb-1">
-        <p class="font-semibold text-slate-800 mb-0.5 flex items-center justify-center gap-1 text-xs sm:text-sm">
+        <p class="font-semibold text-slate-800 mb-0.5 flex items-center justify-center gap-1.5 text-xs sm:text-sm">
             <i class="fa-solid fa-heart text-red-500"></i> Gostou do app? Apoie o projeto!
         </p>
-        <p class="text-[10px] text-slate-500 mb-2">Sua doação ajuda a manter a ferramenta online e sem mensalidades.</p>
+        <p class="text-[11px] text-slate-500 mb-2">Sua doação ajuda a manter a ferramenta online e sem mensalidades.</p>
         
         <div class="flex items-center gap-2">
-            <input type="text" id="inputValorDoacao" value="R$ 0,00" oninput="mascaraMoeda(this)" class="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-semibold text-slate-800 text-center focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
-            <button onclick="gerarECopiarPixDoacao()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-4 py-1.5 rounded-lg text-sm transition flex items-center gap-1.5 cursor-pointer shadow-sm shrink-0 uppercase tracking-wide">
+            <input type="text" id="inputValorDoacao" value="R$ 0,00" oninput="mascaraMoeda(this)" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm font-semibold text-slate-800 text-center focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
+            <button onclick="gerarECopiarPixDoacao()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-4 py-2 rounded-lg text-sm transition flex items-center gap-1.5 cursor-pointer shadow-sm shrink-0 uppercase tracking-wide">
                 <i class="fa-regular fa-copy"></i> Copiar Pix
             </button>
         </div>
@@ -430,7 +430,7 @@
         return payload + crc16(payload);
     }
 
-    function gerarECopiarPixDoacao() {
+    function gerareCopiarPixDoacao() {
         const inputElement = document.getElementById('inputValorDoacao');
         let rawDigits = inputElement.value.replace(/\D/g, "");
         
