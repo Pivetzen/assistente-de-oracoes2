@@ -21,7 +21,7 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            touch-action: manipulation; /* Melhora a resposta ao toque e evita zoom duplo */
+            touch-action: manipulation;
         }
 
         header {
@@ -75,7 +75,7 @@
             flex-direction: column;
             gap: 20px;
             flex-grow: 1;
-            margin-bottom: 180px; /* Espaço exato para o rodapé fixo do Continha */
+            margin-bottom: 180px;
         }
 
         .card {
@@ -150,7 +150,6 @@
             min-height: 50px;
         }
         
-        /* Botão Fale Conosco / WhatsApp Posicionado acima do rodapé */
         .whatsapp-float {
             position: fixed;
             bottom: 165px;
@@ -204,7 +203,7 @@
     Fale Conosco
 </a>
 
-<!-- RODAPÉ FIXO EXATO DO APP CONTINHA -->
+<!-- RODAPÉ FIXO -->
 <footer class="fixed bottom-0 left-0 w-full bg-slate-100 border-t border-slate-300 py-3 text-center text-xs text-slate-600 z-40 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
     
     <!-- SEÇÃO DE DOAÇÃO VIA PIX -->
@@ -216,9 +215,9 @@
         
         <div class="flex items-center gap-2">
             <div class="relative flex-grow">
-                <input type="text" id="inputValorDoacao" value="Digite um valor..." oninput="mascaraMoeda(this)" class="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-semibold text-slate-800 text-center focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <!-- Adicionados inputmode="decimal" e pattern="[0-9]*" para forçar o teclado numérico -->
+                <input type="text" id="inputValorDoacao" value="Digite um valor..." inputmode="decimal" pattern="[0-9]*" oninput="mascaraMoeda(this)" class="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-semibold text-slate-800 text-center focus:outline-none focus:ring-2 focus:ring-emerald-500">
             </div>
-            <!-- Botão com fonte ajustada (text-xs) para garantir linha única -->
             <button onclick="gerarECopiarPixDoacao()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-3.5 py-2 rounded-lg text-xs transition flex items-center justify-center gap-1 cursor-pointer shadow-sm shrink-0 whitespace-nowrap">
                 <i class="fa-regular fa-copy"></i> Copiar Pix
             </button>
@@ -234,7 +233,6 @@
 <script>
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRUImoAtZ4E2g_fLMqCTh4lxQyAOLaHidHq6yIITwLOHL2s1TROu866CksJmtWvrFLnGrWHbCzKMiY4/pub?gid=0&single=true&output=csv';
     
-    // Configurações da Chave Pix de Doação
     const CHAVE_PIX_RECEPTOR = "matheuzzu@hotmail.com";
     const NOME_RECEPTOR = "MATHEUS ARRUDA MAIA";
     const CIDADE_RECEPTOR = "FORTALEZA";
@@ -253,7 +251,6 @@
         window.open(urlYoutube, '_blank');
     }
 
-    // Função para criar o elemento de anúncio e forçar a execução do script
     function criarSlotAnuncio() {
         const div = document.createElement('div');
         div.className = 'ad-slot';
@@ -281,14 +278,13 @@
 
     function renderizarCards(itens) {
         const container = document.getElementById('cards-container');
-        container.innerHTML = ''; // Limpa os cards anteriores
+        container.innerHTML = '';
 
         if (!itens || itens.length === 0) {
             container.innerHTML = '<p style="text-align:center;">Nenhum card encontrado.</p>';
             return;
         }
 
-        // Insere anúncio inicial
         container.appendChild(criarSlotAnuncio());
 
         itens.forEach((item) => {
@@ -298,12 +294,11 @@
             const linkOuTermo = item.link_ou_termo || item.LINK_OU_TERMO || '';
             const ativoVal = (item.ativo || item.ATIVO || '').trim().toLowerCase();
 
-            // Se a coluna 'ativo' estiver preenchida como falso, false, não ou 0, oculta o card
             if (ativoVal === 'falso' || ativoVal === 'false' || ativoVal === 'não' || ativoVal === 'nao' || ativoVal === '0') {
                 return;
             }
 
-            if (!titulo) return; // ignora linhas em branco
+            if (!titulo) return;
 
             const card = document.createElement('div');
             card.className = 'card';
@@ -328,7 +323,6 @@
                 </div>
             `;
 
-            // Atribuição de eventos nos botões
             if (tipo === 'unico') {
                 card.querySelector('.btn-unico').onclick = () => window.open(linkOuTermo, '_blank');
             } else {
@@ -373,7 +367,6 @@
         });
     }
 
-    // Gerador de Payload Pix Copia e Cola[cite: 3]
     function gerarPayloadPix(chave, nome, cidade, valor, txid = "***") {
         function formatField(id, value) {
             const len = value.length.toString().padStart(2, '0');
@@ -385,7 +378,7 @@
         const merchantAccount = formatField('26', `${gui}${key}`);
         
         const categoryCode = formatField('52', '0000');
-        const currency = formatField('53', '986'); // BRL
+        const currency = formatField('53', '986');
         const amountStr = parseFloat(valor).toFixed(2);
         const amount = formatField('54', amountStr);
         const country = formatField('58', 'BR');
@@ -444,7 +437,6 @@
         });
     }
 
-    // Máscara monetária acumulativa idêntica ao app Continha[cite: 3]
     function mascaraMoeda(input) {
         let value = input.value.replace(/\D/g, "");
         
