@@ -72,7 +72,7 @@
             flex-direction: column;
             gap: 20px;
             flex-grow: 1;
-            margin-bottom: 150px; /* Espaço para o rodapé fixo compacto */
+            margin-bottom: 190px; /* Espaço exato para o rodapé fixo do app Continha */
         }
 
         .card {
@@ -147,10 +147,10 @@
             min-height: 50px;
         }
         
-        /* Botão Fale Conosco / WhatsApp Posicionado acima do rodapé compacto */
+        /* Botão Fale Conosco / WhatsApp Posicionado acima do rodapé */
         .whatsapp-float {
             position: fixed;
-            bottom: 135px;
+            bottom: 175px;
             right: 20px;
             background-color: #25d366;
             color: white;
@@ -179,30 +179,21 @@
             fill: white;
         }
 
-        /* Rodapé Fixo Estilo 'Continha APP' (Compacto e Colorido) */
+        /* RODAPÉ FIXO EXATO DO APP CONTINHA */
         footer {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            background-color: #f8fafc;
-            border-top: 1px solid #cbd5e1;
-            padding: 8px 10px;
+            background-color: #f1f5f9; /* bg-slate-100 */
+            border-top: 1px solid #cbd5e1; /* border-slate-300 */
+            padding-top: 12px;
+            padding-bottom: 12px;
             text-align: center;
             font-size: 0.75rem;
-            color: #64748b;
+            color: #475569; /* text-slate-600 */
             z-index: 900;
-            box-shadow: 0 -4px 10px rgba(0,0,0,0.06);
-        }
-
-        .pix-container {
-            max-width: 480px;
-            margin: 0 auto;
-            padding: 8px 12px;
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-            border: 1px solid #e2e8f0;
+            box-shadow: 0 -4px 6px -1px rgba(0,0,0,0.1);
         }
     </style>
 </head>
@@ -227,25 +218,28 @@
     Fale Conosco
 </a>
 
-<!-- RODAPÉ FIXO COMPACTO ESTILO CONTINHA APP -->
+<!-- RODAPÉ FIXO EXATO DO APP CONTINHA[cite: 3] -->
 <footer>
-    <div class="pix-container mx-3 sm:mx-auto">
-        <p class="font-semibold text-slate-800 mb-0.5 flex items-center justify-center gap-1 text-xs">
+    <div style="max-width: 28rem;" class="mx-auto px-4 py-2.5 bg-white rounded-xl shadow-sm border border-slate-300 mb-1 mx-4 sm:mx-auto">
+        <p style="font-weight: 600; color: #1e293b; margin-bottom: 2px;" class="flex items-center justify-center gap-1 text-xs sm:text-sm">
             <i class="fa-solid fa-heart text-red-500"></i> Gostou do app? Apoie o projeto!
         </p>
-        <p class="text-[10px] text-slate-400 mb-1.5">Sua doação ajuda a manter a ferramenta online.</p>
+        <p style="font-size: 10px; color: #64748b; margin-bottom: 8px;">Sua doação ajuda a manter a ferramenta online e sem mensalidades.</p>
         
         <div class="flex items-center gap-2">
-            <input type="text" id="inputValorDoacao" value="Digite um valor..." oninput="mascaraMoeda(this)" class="w-full border border-slate-300 rounded-lg px-2.5 py-1 text-xs font-semibold text-slate-800 text-center focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-emerald-50/40">
-            <button onclick="gerarECopiarPixDoacao()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-3.5 py-1 rounded-lg text-xs transition flex items-center gap-1 cursor-pointer shadow-sm shrink-0">
+            <div class="relative flex-grow">
+                <input type="text" id="inputValorDoacao" value="Digite um valor..." oninput="mascaraMoeda(this)" style="border: 1px solid #cbd5e1; color: #1e293b;" class="w-full rounded-lg px-3 py-1.5 text-xs sm:text-sm font-semibold text-center focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
+            </div>
+            <button onclick="gerarECopiarPixDoacao()" style="background-color: #059669; color: white;" class="hover:bg-emerald-700 font-medium px-4 py-1.5 rounded-lg text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer shadow-sm shrink-0">
                 <i class="fa-regular fa-copy"></i> Copiar Pix
             </button>
         </div>
-        <p id="msgSucessoPix" class="text-[10px] text-emerald-600 font-semibold mt-1 hidden">
-            <i class="fa-solid fa-check-circle"></i> Pix Copia e Cola copiado!
+        <p id="msgSucessoPix" style="font-size: 11px; color: #059669;" class="font-semibold mt-1.5 hidden">
+            <i class="fa-solid fa-check-circle"></i> Código Pix Copia e Cola copiado! Abra seu banco para pagar.
         </p>
     </div>
-    <p class="text-[9px] text-slate-400 mt-1">Assistente de Orações © 2026 - Todos os direitos reservados</p>
+    
+    <p style="font-size: 10px; color: #94a3b8; margin-top: 4px;">Assistente de Orações © 2026 - Todos os direitos reservados</p>
 </footer>
 
 <script>
@@ -390,7 +384,7 @@
         });
     }
 
-    // Gerador de Payload Pix Copia e Cola
+    // Gerador de Payload Pix Copia e Cola[cite: 3]
     function gerarPayloadPix(chave, nome, cidade, valor, txid = "***") {
         function formatField(id, value) {
             const len = value.length.toString().padStart(2, '0');
@@ -430,7 +424,7 @@
         return payload + crc16(payload);
     }
 
-    function gerareCopiarPixDoacao() {
+    function gerarECopiarPixDoacao() {
         const inputElement = document.getElementById('inputValorDoacao');
         let rawDigits = inputElement.value.replace(/\D/g, "");
         
@@ -451,6 +445,7 @@
         navigator.clipboard.writeText(pixPayload).then(() => {
             const msg = document.getElementById('msgSucessoPix');
             if (msg) {
+                msg.classList.0 && msg.classList.remove('hidden'); // Fallback seguro
                 msg.classList.remove('hidden');
                 setTimeout(() => {
                     msg.classList.add('hidden');
@@ -461,7 +456,7 @@
         });
     }
 
-    // Máscara monetária acumulativa para o input de doação
+    // Máscara monetária acumulativa idêntica ao app Continha[cite: 3]
     function mascaraMoeda(input) {
         let value = input.value.replace(/\D/g, "");
         
