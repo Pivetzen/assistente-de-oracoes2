@@ -20,7 +20,7 @@
 
         header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             border-bottom: 2px solid #d4af37;
             padding-bottom: 10px;
             width: 100%;
@@ -31,6 +31,35 @@
             color: #003366;
             margin: 0;
             font-variant: small-caps;
+        }
+
+        header p {
+            margin: 5px 0 0 0;
+            color: #7f8c8d;
+        }
+
+        .search-container {
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .search-input:focus {
+            border-color: #003366;
+            box-shadow: 0 4px 12px rgba(0,51,102,0.1);
         }
 
         .container {
@@ -113,8 +142,41 @@
             min-height: 50px;
         }
         
+        /* Botão Fale Conosco / WhatsApp */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #25d366;
+            color: white;
+            border-radius: 50px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .whatsapp-float:hover {
+            background-color: #20ba5a;
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .whatsapp-float svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
         footer {
             margin-top: 40px;
+            margin-bottom: 60px;
             font-size: 0.8rem;
             color: #7f8c8d;
             text-align: center;
@@ -128,9 +190,19 @@
     <p>Assista às celebrações do dia</p>
 </header>
 
+<div class="search-container">
+    <input type="text" id="searchInput" class="search-input" placeholder="🔍 Pesquisar oração ou canal..." onkeyup="filtrarCards()">
+</div>
+
 <div class="container" id="cards-container">
     <p style="text-align: center;">Carregando orações...</p>
 </div>
+
+<!-- Botão Flutuante Fale Conosco / WhatsApp -->
+<a href="https://wa.me/5585987804628?text=Olá!%20Gostaria%20de%20sugerir%20uma%20melhoria%20para%20o%20aplicativo%20Assistente%20de%20Orações:" class="whatsapp-float" target="_blank" title="Fale Conosco">
+    <svg viewBox="0 0 24 24"><path d="M12.04 2c-5.52 0-10 4.48-10 10 0 1.77.46 3.45 1.28 4.9L2 22l5.25-1.38c1.41.77 3.03 1.2 4.79 1.2 5.52 0 10-4.48 10-10s-4.48-10-10-10zm5.83 14.33c-.24.67-1.38 1.25-1.9 1.33-.5.08-1.14.12-3.03-.63-1.07-.43-1.76-1.12-2.48-2.12-.72-1-1.52-2.73-1.52-4.14 0-1.41.74-2.1 1.01-2.38.27-.28.59-.35.79-.35.2 0 .4 0 .58.01.19.01.44-.07.69.53.25.6.86 2.11.94 2.27.08.16.13.35.02.56-.11.21-.16.34-.32.53-.16.19-.34.42-.49.56-.16.16-.33.33-.14.65.19.32.84 1.39 1.8 2.25 1.24 1.11 2.28 1.46 2.6 1.62.32.16.51.13.7-.09.19-.22.82-.95 1.04-1.28.22-.33.44-.27.74-.16.3.11 1.91.9 2.23 1.06.32.16.54.24.62.37.08.13.08.75-.16 1.42z"/></svg>
+    Fale Conosco
+</a>
 
 <footer>
     <p>Que a paz de Cristo esteja com você.</p>
@@ -138,6 +210,8 @@
 
 <script>
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRUImoAtZ4E2g_fLMqCTh4lxQyAOLaHidHq6yIITwLOHL2s1TROu866CksJmtWvrFLnGrWHbCzKMiY4/pub?gid=0&single=true&output=csv';
+    
+    let todosItens = [];
 
     function buscar(termo, periodo) {
         const data = new Date();
@@ -177,6 +251,82 @@
         return div;
     }
 
+    function renderizarCards(itens) {
+        const container = document.getElementById('cards-container');
+        container.innerHTML = ''; // Limpa os cards anteriores
+
+        if (!itens || itens.length === 0) {
+            container.innerHTML = '<p style="text-align:center;">Nenhum card encontrado.</p>';
+            return;
+        }
+
+        // Insere anúncio inicial
+        container.appendChild(criarSlotAnuncio());
+
+        itens.forEach((item) => {
+            const titulo = item.titulo || item.TITULO || '';
+            const imagem = item.imagem || item.IMAGEM || '';
+            const tipo = (item.tipo || item.TIPO || '').trim().toLowerCase();
+            const linkOuTermo = item.link_ou_termo || item.LINK_OU_TERMO || '';
+            const ativoVal = (item.ativo || item.ATIVO || '').trim().toLowerCase();
+
+            // Se a coluna 'ativo' estiver preenchida como falso/FALSE/não, oculta o card
+            if (ativoVal === 'falso' || ativoVal === 'false' || ativoVal === 'não' || ativoVal === 'nao' || ativoVal === '0') {
+                return;
+            }
+
+            if (!titulo) return; // ignora linhas em branco
+
+            const card = document.createElement('div');
+            card.className = 'card';
+
+            let buttonsDivHTML = '';
+            if (tipo === 'unico') {
+                buttonsDivHTML = `<button class="btn-unico">Acessar Agora</button>`;
+            } else {
+                buttonsDivHTML = `
+                    <button class="btn-hoje">Hoje</button>
+                    <button class="btn-ontem">Ontem</button>
+                `;
+            }
+
+            card.innerHTML = `
+                <img src="${imagem}" class="card-img" alt="${titulo}">
+                <div class="card-content">
+                    <h3>${titulo}</h3>
+                    <div class="buttons">
+                        ${buttonsDivHTML}
+                    </div>
+                </div>
+            `;
+
+            // Atribuição de eventos nos botões
+            if (tipo === 'unico') {
+                card.querySelector('.btn-unico').onclick = () => window.open(linkOuTermo, '_blank');
+            } else {
+                card.querySelector('.btn-hoje').onclick = () => buscar(linkOuTermo, 'hoje');
+                card.querySelector('.btn-ontem').onclick = () => buscar(linkOuTermo, 'ontem');
+            }
+
+            container.appendChild(card);
+            container.appendChild(criarSlotAnuncio());
+        });
+    }
+
+    function filtrarCards() {
+        const termoPesquisa = document.getElementById('searchInput').value.toLowerCase().trim();
+        
+        const itensFiltrados = todosItens.filter(item => {
+            const titulo = (item.titulo || item.TITULO || '').toLowerCase();
+            const tipo = (item.tipo || item.TIPO || '').toLowerCase();
+            const linkOuTermo = (item.link_ou_termo || item.LINK_OU_TERMO || '').toLowerCase();
+            
+            return titulo.includes(termoPesquisa) || tipo.includes(termoPesquisa) || linkOuTermo.includes(termoPesquisa);
+        });
+
+        renderizarCards(itensFiltrados);
+    }
+
     async function carregarCards() {
         const container = document.getElementById('cards-container');
         
@@ -185,59 +335,8 @@
             header: true,
             skipEmptyLines: true,
             complete: function(results) {
-                const itens = results.data;
-                container.innerHTML = ''; // Limpa a mensagem de carregamento
-
-                if (!itens || itens.length === 0) {
-                    container.innerHTML = '<p style="text-align:center;">Nenhum card encontrado na planilha.</p>';
-                    return;
-                }
-
-                // Insere anúncio inicial
-                container.appendChild(criarSlotAnuncio());
-
-                itens.forEach((item) => {
-                    const titulo = item.titulo || item.TITULO || '';
-                    const imagem = item.imagem || item.IMAGEM || '';
-                    const tipo = (item.tipo || item.TIPO || '').trim().toLowerCase();
-                    const linkOuTermo = item.link_ou_termo || item.LINK_OU_TERMO || '';
-
-                    if (!titulo) return; // ignora linhas em branco
-
-                    const card = document.createElement('div');
-                    card.className = 'card';
-
-                    let buttonsDivHTML = '';
-                    if (tipo === 'unico') {
-                        buttonsDivHTML = `<button class="btn-unico">Acessar Agora</button>`;
-                    } else {
-                        buttonsDivHTML = `
-                            <button class="btn-hoje">Hoje</button>
-                            <button class="btn-ontem">Ontem</button>
-                        `;
-                    }
-
-                    card.innerHTML = `
-                        <img src="${imagem}" class="card-img" alt="${titulo}">
-                        <div class="card-content">
-                            <h3>${titulo}</h3>
-                            <div class="buttons">
-                                ${buttonsDivHTML}
-                            </div>
-                        </div>
-                    `;
-
-                    // Atribuição de eventos nos botões para evitar problemas com caracteres em onclick
-                    if (tipo === 'unico') {
-                        card.querySelector('.btn-unico').onclick = () => window.open(linkOuTermo, '_blank');
-                    } else {
-                        card.querySelector('.btn-hoje').onclick = () => buscar(linkOuTermo, 'hoje');
-                        card.querySelector('.btn-ontem').onclick = () => buscar(linkOuTermo, 'ontem');
-                    }
-
-                    container.appendChild(card);
-                    container.appendChild(criarSlotAnuncio());
-                });
+                todosItens = results.data || [];
+                renderizarCards(todosItens);
             },
             error: function(err) {
                 console.error('Erro ao ler CSV:', err);
