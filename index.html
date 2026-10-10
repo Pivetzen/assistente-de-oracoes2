@@ -6,13 +6,15 @@
     <title>Assistente de Orações</title>
     <!-- Biblioteca leve e robusta para processar o CSV sem quebrar URLs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-    <!-- Ícones FontAwesome para os botões -->
+    <!-- Tailwind CSS para estilização rápida e responsiva idêntica ao modelo -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Ícones FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
-            color: #2c3e50;
+            background-color: #f1f5f9;
+            color: #1e293b;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -38,7 +40,7 @@
 
         header p {
             margin: 5px 0 0 0;
-            color: #7f8c8d;
+            color: #64748b;
         }
 
         .search-container {
@@ -50,7 +52,7 @@
         .search-input {
             width: 100%;
             padding: 14px 18px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid #e2e8f0;
             border-radius: 12px;
             font-size: 1rem;
             outline: none;
@@ -72,7 +74,7 @@
             flex-direction: column;
             gap: 20px;
             flex-grow: 1;
-            margin-bottom: 190px; /* Espaço exato para o rodapé fixo do app Continha */
+            margin-bottom: 180px; /* Espaço exato para o rodapé fixo do Continha */
         }
 
         .card {
@@ -150,7 +152,7 @@
         /* Botão Fale Conosco / WhatsApp Posicionado acima do rodapé */
         .whatsapp-float {
             position: fixed;
-            bottom: 175px;
+            bottom: 165px;
             right: 20px;
             background-color: #25d366;
             color: white;
@@ -178,26 +180,9 @@
             height: 22px;
             fill: white;
         }
-
-        /* RODAPÉ FIXO EXATO DO APP CONTINHA */
-        footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: #f1f5f9; /* bg-slate-100 */
-            border-top: 1px solid #cbd5e1; /* border-slate-300 */
-            padding-top: 12px;
-            padding-bottom: 12px;
-            text-align: center;
-            font-size: 0.75rem;
-            color: #475569; /* text-slate-600 */
-            z-index: 900;
-            box-shadow: 0 -4px 6px -1px rgba(0,0,0,0.1);
-        }
     </style>
 </head>
-<body>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col items-center">
 
 <header>
     <h1>Canais de Oração</h1>
@@ -219,27 +204,29 @@
 </a>
 
 <!-- RODAPÉ FIXO EXATO DO APP CONTINHA[cite: 3] -->
-<footer>
-    <div style="max-width: 28rem;" class="mx-auto px-4 py-2.5 bg-white rounded-xl shadow-sm border border-slate-300 mb-1 mx-4 sm:mx-auto">
-        <p style="font-weight: 600; color: #1e293b; margin-bottom: 2px;" class="flex items-center justify-center gap-1 text-xs sm:text-sm">
+<footer class="fixed bottom-0 left-0 w-full bg-slate-100 border-t border-slate-300 py-3 text-center text-xs text-slate-600 z-40 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+    
+    <!-- SEÇÃO DE DOAÇÃO VIA PIX[cite: 3] -->
+    <div class="max-w-md mx-auto px-4 py-2.5 bg-white rounded-xl shadow-sm border border-slate-300 mb-1 mx-4 sm:mx-auto">
+        <p class="font-semibold text-slate-800 mb-0.5 flex items-center justify-center gap-1">
             <i class="fa-solid fa-heart text-red-500"></i> Gostou do app? Apoie o projeto!
         </p>
-        <p style="font-size: 10px; color: #64748b; margin-bottom: 8px;">Sua doação ajuda a manter a ferramenta online e sem mensalidades.</p>
+        <p class="text-[10px] text-slate-500 mb-2">Sua doação ajuda a manter a ferramenta online e sem mensalidades.</p>
         
         <div class="flex items-center gap-2">
             <div class="relative flex-grow">
-                <input type="text" id="inputValorDoacao" value="Digite um valor..." oninput="mascaraMoeda(this)" style="border: 1px solid #cbd5e1; color: #1e293b;" class="w-full rounded-lg px-3 py-1.5 text-xs sm:text-sm font-semibold text-center focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
+                <input type="text" id="inputValorDoacao" value="Digite um valor..." oninput="mascaraMoeda(this)" class="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-semibold text-slate-800 text-center focus:outline-none focus:ring-2 focus:ring-emerald-500">
             </div>
-            <button onclick="gerarECopiarPixDoacao()" style="background-color: #059669; color: white;" class="hover:bg-emerald-700 font-medium px-4 py-1.5 rounded-lg text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer shadow-sm shrink-0">
+            <button onclick="gerarECopiarPixDoacao()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-4 py-1.5 rounded-lg text-sm transition flex items-center gap-1.5 cursor-pointer shadow-sm shrink-0">
                 <i class="fa-regular fa-copy"></i> Copiar Pix
             </button>
         </div>
-        <p id="msgSucessoPix" style="font-size: 11px; color: #059669;" class="font-semibold mt-1.5 hidden">
+        <p id="msgSucessoPix" class="text-[11px] text-emerald-600 font-semibold mt-1.5 hidden">
             <i class="fa-solid fa-check-circle"></i> Código Pix Copia e Cola copiado! Abra seu banco para pagar.
         </p>
     </div>
-    
-    <p style="font-size: 10px; color: #94a3b8; margin-top: 4px;">Assistente de Orações © 2026 - Todos os direitos reservados</p>
+
+    <p class="text-[10px] text-slate-400">Assistente de Orações © 2026 - Todos os direitos reservados</p>
 </footer>
 
 <script>
@@ -445,7 +432,6 @@
         navigator.clipboard.writeText(pixPayload).then(() => {
             const msg = document.getElementById('msgSucessoPix');
             if (msg) {
-                msg.classList.0 && msg.classList.remove('hidden'); // Fallback seguro
                 msg.classList.remove('hidden');
                 setTimeout(() => {
                     msg.classList.add('hidden');
