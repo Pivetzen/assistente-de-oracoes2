@@ -72,7 +72,7 @@
             flex-direction: column;
             gap: 20px;
             flex-grow: 1;
-            margin-bottom: 180px; /* Espaço suficiente para o rodapé fixo maior */
+            margin-bottom: 150px; /* Espaço para o rodapé fixo compacto */
         }
 
         .card {
@@ -147,10 +147,10 @@
             min-height: 50px;
         }
         
-        /* Botão Fale Conosco / WhatsApp Posicionado acima do rodapé */
+        /* Botão Fale Conosco / WhatsApp Posicionado acima do rodapé compacto */
         .whatsapp-float {
             position: fixed;
-            bottom: 165px;
+            bottom: 135px;
             right: 20px;
             background-color: #25d366;
             color: white;
@@ -179,29 +179,29 @@
             fill: white;
         }
 
-        /* Rodapé Fixo com Doação Pix limpo e elegante */
+        /* Rodapé Fixo Estilo 'Continha APP' (Compacto e Colorido) */
         footer {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            background-color: #ffffff;
-            border-top: 1px solid #e2e8f0;
-            padding: 12px 10px;
+            background-color: #f8fafc;
+            border-top: 1px solid #cbd5e1;
+            padding: 8px 10px;
             text-align: center;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #64748b;
             z-index: 900;
-            box-shadow: 0 -4px 12px rgba(0,0,0,0.06);
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.06);
         }
 
         .pix-container {
-            max-width: 520px;
+            max-width: 480px;
             margin: 0 auto;
-            padding: 12px 16px;
+            padding: 8px 12px;
             background: #ffffff;
-            border-radius: 14px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
             border: 1px solid #e2e8f0;
         }
     </style>
@@ -227,25 +227,25 @@
     Fale Conosco
 </a>
 
-<!-- RODAPÉ FIXO COM DOAÇÃO PIX REESTRUTURADO -->
+<!-- RODAPÉ FIXO COMPACTO ESTILO CONTINHA APP -->
 <footer>
-    <div class="pix-container mx-3 sm:mx-auto mb-1">
-        <p class="font-semibold text-slate-800 mb-0.5 flex items-center justify-center gap-1.5 text-xs sm:text-sm">
+    <div class="pix-container mx-3 sm:mx-auto">
+        <p class="font-semibold text-slate-800 mb-0.5 flex items-center justify-center gap-1 text-xs">
             <i class="fa-solid fa-heart text-red-500"></i> Gostou do app? Apoie o projeto!
         </p>
-        <p class="text-[11px] text-slate-500 mb-2">Sua doação ajuda a manter a ferramenta online e sem mensalidades.</p>
+        <p class="text-[10px] text-slate-400 mb-1.5">Sua doação ajuda a manter a ferramenta online.</p>
         
         <div class="flex items-center gap-2">
-            <input type="text" id="inputValorDoacao" value="R$ 0,00" oninput="mascaraMoeda(this)" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm font-semibold text-slate-800 text-center focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
-            <button onclick="gerarECopiarPixDoacao()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-4 py-2 rounded-lg text-sm transition flex items-center gap-1.5 cursor-pointer shadow-sm shrink-0 uppercase tracking-wide">
+            <input type="text" id="inputValorDoacao" value="Digite um valor..." oninput="mascaraMoeda(this)" class="w-full border border-slate-300 rounded-lg px-2.5 py-1 text-xs font-semibold text-slate-800 text-center focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-emerald-50/40">
+            <button onclick="gerarECopiarPixDoacao()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-3.5 py-1 rounded-lg text-xs transition flex items-center gap-1 cursor-pointer shadow-sm shrink-0">
                 <i class="fa-regular fa-copy"></i> Copiar Pix
             </button>
         </div>
-        <p id="msgSucessoPix" class="text-[11px] text-emerald-600 font-semibold mt-1.5 hidden">
-            <i class="fa-solid fa-check-circle"></i> Código Pix Copia e Cola copiado! Abra seu banco para pagar.
+        <p id="msgSucessoPix" class="text-[10px] text-emerald-600 font-semibold mt-1 hidden">
+            <i class="fa-solid fa-check-circle"></i> Pix Copia e Cola copiado!
         </p>
     </div>
-    <p class="text-[10px] text-slate-400 mt-1">Assistente de Orações © 2026 - Todos os direitos reservados</p>
+    <p class="text-[9px] text-slate-400 mt-1">Assistente de Orações © 2026 - Todos os direitos reservados</p>
 </footer>
 
 <script>
@@ -466,7 +466,7 @@
         let value = input.value.replace(/\D/g, "");
         
         if (!value || value === "00") {
-            input.value = "R$ 0,00";
+            input.value = "Digite um valor...";
             return;
         }
         
