@@ -6,10 +6,14 @@
     <title>Assistente de Orações</title>
     <!-- Biblioteca leve e robusta para processar o CSV sem quebrar URLs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-    <!-- Tailwind CSS para estilização rápida e responsiva idêntica ao modelo -->
+    <!-- Tailwind CSS para estilização rápida e responsiva -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- Ícones FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- SCRIPT GLOBAL DO GOOGLE ADSENSE (Substitua ca-pub-XXXXXXXXXXXXXXXX pelo seu ID) -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -146,8 +150,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 10px 0;
-            min-height: 50px;
+            padding: 5px 0;
+            min-height: 90px;
+            overflow: hidden;
         }
         
         .whatsapp-float {
@@ -215,7 +220,6 @@
         
         <div class="flex items-center gap-2">
             <div class="relative flex-grow">
-                <!-- Adicionados inputmode="decimal" e pattern="[0-9]*" para forçar o teclado numérico -->
                 <input type="text" id="inputValorDoacao" value="Digite um valor..." inputmode="decimal" pattern="[0-9]*" oninput="mascaraMoeda(this)" class="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-semibold text-slate-800 text-center focus:outline-none focus:ring-2 focus:ring-emerald-500">
             </div>
             <button onclick="gerarECopiarPixDoacao()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-3.5 py-2 rounded-lg text-xs transition flex items-center justify-center gap-1 cursor-pointer shadow-sm shrink-0 whitespace-nowrap">
@@ -251,28 +255,39 @@
         window.open(urlYoutube, '_blank');
     }
 
-    function criarSlotAnuncio() {
+    // Cria o slot de anúncio do AdSense
+    function criarSlotAnuncio(isTop = false) {
         const div = document.createElement('div');
         div.className = 'ad-slot';
 
-        const scriptConfig = document.createElement('script');
-        scriptConfig.type = 'text/javascript';
-        scriptConfig.text = `
-            atOptions = {
-                'key' : 'f95477b41aad412b789767be6416723b',
-                'format' : 'iframe',
-                'height' : 50,
-                'width' : 320,
-                'params' : {}
-            };
-        `;
+        const ins = document.createElement('ins');
+        ins.className = 'adsbygoogle';
+        ins.style.display = 'block';
+        ins.setAttribute('data-ad-client', 'ca-pub-XXXXXXXXXXXXXXXX'); // Substitua pelo seu ID AdSense
 
-        const scriptInvoke = document.createElement('script');
-        scriptInvoke.type = 'text/javascript';
-        scriptInvoke.src = 'https://www.highperformanceformat.com/f95477b41aad412b789767be6416723b/invoke.js';
+        if (isTop) {
+            // Anúncio Banner Superior
+            ins.setAttribute('data-ad-slot', '1234567890'); // ID do Bloco Banner
+            ins.setAttribute('data-ad-format', 'auto');
+            ins.setAttribute('data-full-width-responsive', 'true');
+        } else {
+            // Anúncio entre os Cards (Menor / In-feed ou Fluido)
+            ins.setAttribute('data-ad-slot', '0987654321'); // ID do Bloco In-feed/Menor
+            ins.setAttribute('data-ad-format', 'fluid');
+            ins.setAttribute('data-ad-layout-key', '-fb+5w+4e-db+86'); // Opcional (se for bloco de feed)
+        }
 
-        div.appendChild(scriptConfig);
-        div.appendChild(scriptInvoke);
+        div.appendChild(ins);
+
+        // Dispara a requisição do AdSense para o novo elemento dinâmico
+        setTimeout(() => {
+            try {
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            } catch (e) {
+                console.error("Erro ao carregar AdSense:", e);
+            }
+        }, 50);
+
         return div;
     }
 
@@ -285,7 +300,8 @@
             return;
         }
 
-        container.appendChild(criarSlotAnuncio());
+        // Anúncio superior (banner principal abaixo da pesquisa)
+        container.appendChild(criarSlotAnuncio(true));
 
         itens.forEach((item) => {
             const titulo = item.titulo || item.TITULO || '';
@@ -331,7 +347,8 @@
             }
 
             container.appendChild(card);
-            container.appendChild(criarSlotAnuncio());
+            // Anúncio individual posicionado exatamente abaixo do card
+            container.appendChild(criarSlotAnuncio(false));
         });
     }
 
