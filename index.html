@@ -308,7 +308,11 @@
             const titulo = item.titulo || item.TITULO || '';
             const imagem = item.imagem || item.IMAGEM || '';
             const tipo = (item.tipo || item.TIPO || '').trim().toLowerCase();
-            const linkOuTermo = item.link_ou_termo || item.LINK_OU_TERMO || '';
+            let linkOuTermo = item.link_ou_termo || item.LINK_OU_TERMO || '';
+            
+            // Limpa colchetes acidentais da string principal
+            linkOuTermo = linkOuTermo.replace(/^\[\vert{}\]$/g, '').trim();
+
             const ativoVal = (item.ativo || item.ATIVO || '').trim().toLowerCase();
 
             if (ativoVal === 'falso' || ativoVal === 'false' || ativoVal === 'não' || ativoVal === 'nao' || ativoVal === '0') {
@@ -321,24 +325,21 @@
             card.className = 'card';
 
             let buttonsDivHTML = '';
-            let botoesMapeados = []; // Armazenará { rotulo, link } para o tipo 'multipla'
 
             if (tipo === 'unico') {
                 buttonsDivHTML = `<button class="btn-unico">Acessar Agora</button>`;
             } 
             else if (tipo === 'multipla') {
-                // Exemplo no CSV: "Mistérios Gloriosos: https://link1.com ; Mistérios Gozosos: https://link2.com"
                 const pares = linkOuTermo.split(';');
                 
                 pares.forEach(par => {
                     const partes = par.split(':');
                     if (partes.length >= 2) {
                         const rotulo = partes[0].trim();
-                        // Reconstrói a URL caso ela contenha "https://" (juntando o restante das partes se houver mais dois-pontos)
-                        const link = partes.slice(1).join(':').trim();
+                        // Limpa colchetes ou espaços extras da URL individual do botão
+                        let link = partes.slice(1).join(':').trim().replace(/^\[\vert{}\]$/g, '').trim();
                         
                         if (rotulo && link) {
-                            botoesMapeados.push({ rotulo, link });
                             buttonsDivHTML += `<button class="btn-multipla" data-link="${link}">${rotulo}</button>`;
                         }
                     }
