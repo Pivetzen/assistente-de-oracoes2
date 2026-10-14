@@ -118,27 +118,30 @@
 
         .buttons {
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
-            gap: 15px;
+            gap: 10px;
             margin-top: 15px;
         }
 
         button {
             flex: 1;
+            min-width: 120px;
             padding: 12px;
             border: none;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             transition: 0.3s;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .btn-hoje { background-color: #003366; color: white; }
         .btn-ontem { background-color: #d4af37; color: white; }
-        .btn-unico { background-color: #2c3e50; color: white; }
+        .btn-unico { background-color: #2c3e50; color: white; width: 100%; }
+        .btn-multipla { background-color: #0d9488; color: white; }
 
         button:hover {
             filter: brightness(1.2);
@@ -258,7 +261,6 @@
         window.open(urlYoutube, '_blank');
     }
 
-    // Cria o slot de anúncio de forma dinâmica com o seu Publisher ID
     function criarSlotAnuncio(isTop = false) {
         const div = document.createElement('div');
         div.className = 'ad-slot';
@@ -269,12 +271,10 @@
         ins.setAttribute('data-ad-client', 'ca-pub-1493004011223448');
 
         if (isTop) {
-            // Anúncio Banner Superior 
             ins.setAttribute('data-ad-slot', '2777467804');
             ins.setAttribute('data-ad-format', 'auto');
             ins.setAttribute('data-full-width-responsive', 'true');
         } else {
-            // Anúncio entre os Cards
             ins.setAttribute('data-ad-slot', '2777467804');
             ins.setAttribute('data-ad-format', 'auto');
             ins.setAttribute('data-full-width-responsive', 'true');
@@ -282,7 +282,6 @@
 
         div.appendChild(ins);
 
-        // Dispara a requisição do AdSense de forma segura para o elemento dinâmico
         setTimeout(() => {
             try {
                 (adsbygoogle = window.adsbygoogle || []).push({});
@@ -303,7 +302,6 @@
             return;
         }
 
-        // Anúncio superior (logo abaixo da barra de pesquisa)
         container.appendChild(criarSlotAnuncio(true));
 
         itens.forEach((item, index) => {
@@ -323,9 +321,31 @@
             card.className = 'card';
 
             let buttonsDivHTML = '';
+            let botoesMapeados = []; // Armazenará { rotulo, link } para o tipo 'multipla'
+
             if (tipo === 'unico') {
                 buttonsDivHTML = `<button class="btn-unico">Acessar Agora</button>`;
-            } else {
+            } 
+            else if (tipo === 'multipla') {
+                // Exemplo no CSV: "Mistérios Gloriosos: https://link1.com ; Mistérios Gozosos: https://link2.com"
+                const pares = linkOuTermo.split(';');
+                
+                pares.forEach(par => {
+                    const partes = par.split(':');
+                    if (partes.length >= 2) {
+                        const rotulo = partes[0].trim();
+                        // Reconstrói a URL caso ela contenha "https://" (juntando o restante das partes se houver mais dois-pontos)
+                        const link = partes.slice(1).join(':').trim();
+                        
+                        if (rotulo && link) {
+                            botoesMapeados.push({ rotulo, link });
+                            buttonsDivHTML += `<button class="btn-multipla" data-link="${link}">${rotulo}</button>`;
+                        }
+                    }
+                });
+            } 
+            else {
+                // Padrão para 'busca_data'
                 buttonsDivHTML = `
                     <button class="btn-hoje">Hoje</button>
                     <button class="btn-ontem">Ontem</button>
@@ -342,16 +362,24 @@
                 </div>
             `;
 
+            // Atribuição dos eventos de clique correspondentes
             if (tipo === 'unico') {
                 card.querySelector('.btn-unico').onclick = () => window.open(linkOuTermo, '_blank');
-            } else {
+            } 
+            else if (tipo === 'multipla') {
+                const botoesMultiplos = card.querySelectorAll('.btn-multipla');
+                botoesMultiplos.forEach(btn => {
+                    const urlDestino = btn.getAttribute('data-link');
+                    btn.onclick = () => window.open(urlDestino, '_blank');
+                });
+            } 
+            else {
                 card.querySelector('.btn-hoje').onclick = () => buscar(linkOuTermo, 'hoje');
                 card.querySelector('.btn-ontem').onclick = () => buscar(linkOuTermo, 'ontem');
             }
 
             container.appendChild(card);
 
-            // Insere um anúncio compacto entre cada card da lista
             if (index < itens.length - 1) {
                 container.appendChild(criarSlotAnuncio(false));
             }
