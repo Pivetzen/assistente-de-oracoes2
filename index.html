@@ -11,8 +11,8 @@
     <!-- Ícones FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- SCRIPT GLOBAL DO GOOGLE ADSENSE (Substitua ca-pub-XXXXXXXXXXXXXXXX pelo seu ID) -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+    <!-- SCRIPT GLOBAL DO GOOGLE ADSENSE -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1493004011223448" crossorigin="anonymous"></script>
 
     <style>
         body {
@@ -150,9 +150,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 5px 0;
+            padding: 10px 0;
             min-height: 90px;
             overflow: hidden;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
         }
         
         .whatsapp-float {
@@ -255,7 +258,7 @@
         window.open(urlYoutube, '_blank');
     }
 
-    // Cria o slot de anúncio do AdSense
+    // Cria o slot de anúncio de forma dinâmica com o seu Publisher ID
     function criarSlotAnuncio(isTop = false) {
         const div = document.createElement('div');
         div.className = 'ad-slot';
@@ -263,30 +266,30 @@
         const ins = document.createElement('ins');
         ins.className = 'adsbygoogle';
         ins.style.display = 'block';
-        ins.setAttribute('data-ad-client', 'ca-pub-XXXXXXXXXXXXXXXX'); // Substitua pelo seu ID AdSense
+        ins.setAttribute('data-ad-client', 'ca-pub-1493004011223448');
 
         if (isTop) {
-            // Anúncio Banner Superior
-            ins.setAttribute('data-ad-slot', '1234567890'); // ID do Bloco Banner
+            // Anúncio Banner Superior (Substitua '1234567890' pelo ID do bloco gerado no painel)
+            ins.setAttribute('data-ad-slot', '1234567890');
             ins.setAttribute('data-ad-format', 'auto');
             ins.setAttribute('data-full-width-responsive', 'true');
         } else {
-            // Anúncio entre os Cards (Menor / In-feed ou Fluido)
-            ins.setAttribute('data-ad-slot', '0987654321'); // ID do Bloco In-feed/Menor
-            ins.setAttribute('data-ad-format', 'fluid');
-            ins.setAttribute('data-ad-layout-key', '-fb+5w+4e-db+86'); // Opcional (se for bloco de feed)
+            // Anúncio entre os Cards (Substitua '0987654321' pelo ID do bloco gerado no painel)
+            ins.setAttribute('data-ad-slot', '0987654321');
+            ins.setAttribute('data-ad-format', 'auto');
+            ins.setAttribute('data-full-width-responsive', 'true');
         }
 
         div.appendChild(ins);
 
-        // Dispara a requisição do AdSense para o novo elemento dinâmico
+        // Dispara a requisição do AdSense de forma segura para o elemento dinâmico
         setTimeout(() => {
             try {
                 (adsbygoogle = window.adsbygoogle || []).push({});
             } catch (e) {
                 console.error("Erro ao carregar AdSense:", e);
             }
-        }, 50);
+        }, 100);
 
         return div;
     }
@@ -300,10 +303,10 @@
             return;
         }
 
-        // Anúncio superior (banner principal abaixo da pesquisa)
+        // Anúncio superior (logo abaixo da barra de pesquisa)
         container.appendChild(criarSlotAnuncio(true));
 
-        itens.forEach((item) => {
+        itens.forEach((item, index) => {
             const titulo = item.titulo || item.TITULO || '';
             const imagem = item.imagem || item.IMAGEM || '';
             const tipo = (item.tipo || item.TIPO || '').trim().toLowerCase();
@@ -347,8 +350,11 @@
             }
 
             container.appendChild(card);
-            // Anúncio individual posicionado exatamente abaixo do card
-            container.appendChild(criarSlotAnuncio(false));
+
+            // Insere um anúncio compacto entre cada card da lista
+            if (index < itens.length - 1) {
+                container.appendChild(criarSlotAnuncio(false));
+            }
         });
     }
 
