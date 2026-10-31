@@ -151,7 +151,7 @@
             justify-content: center;
             align-items: center;
             padding: 10px 0;
-            min-height: 90px;
+            min-height: 60px;
             overflow: hidden;
             background: #fff;
             border-radius: 12px;
@@ -159,9 +159,8 @@
         }
 
         .ad-iframe {
-            width: 100%;
-            max-width: 728px;
-            height: 90px;
+            width: 320px;
+            height: 50px;
             border: none;
             overflow: hidden;
         }
@@ -270,7 +269,6 @@
         const div = document.createElement('div');
         div.className = 'ad-slot';
 
-        // Criação de iframe dinâmico para isolar a variável atOptions por slot
         const iframe = document.createElement('iframe');
         iframe.className = 'ad-iframe';
         iframe.scrolling = 'no';
@@ -278,7 +276,6 @@
 
         div.appendChild(iframe);
 
-        // Injeta o script atOptions e o script do Adsterra dentro do iframe isolado
         setTimeout(() => {
             const iframeDoc = iframe.contentWindow || iframe.contentDocument.document || iframe.contentDocument;
             const doc = iframeDoc.document || iframeDoc;
@@ -294,14 +291,14 @@
                 <body>
                     <script type="text/javascript">
                         atOptions = {
-                            'key' : '18fae934ab77c252b43b423e7f17256e',
+                            'key' : '4c23cc12768744e07619afbfd9d2b10f',
                             'format' : 'iframe',
-                            'height' : 90,
-                            'width' : 728,
+                            'height' : 50,
+                            'width' : 320,
                             'params' : {}
                         };
                     <\/script>
-                    <script type="text/javascript" src="https://bauval.org/22/18fae934ab77c252b43b423e7f17256e"><\/script>
+                    <script type="text/javascript" src="https://bauval.org/22/4c23cc12768744e07619afbfd9d2b10f"><\/script>
                 </body>
                 </html>
             `);
@@ -320,7 +317,6 @@
             return;
         }
 
-        // Insere um banner no topo
         container.appendChild(criarSlotAnuncio());
 
         itens.forEach((item, index) => {
@@ -396,7 +392,6 @@
 
             container.appendChild(card);
 
-            // Insere um banner entre os cards
             if (index < itens.length - 1) {
                 container.appendChild(criarSlotAnuncio());
             }
