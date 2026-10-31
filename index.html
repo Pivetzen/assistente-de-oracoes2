@@ -262,10 +262,10 @@
         const div = document.createElement('div');
         div.className = 'ad-slot';
 
-        // Injetando o script do Monetag diretamente para preencher o bloco estático
+        // Inserção da tag In-Page Banner do Monetag dentro do elemento estático
         const scriptTag = document.createElement('script');
-        scriptTag.dataset.zone = '12159881';
-        scriptTag.src = 'https://n6wxm.com/vignette.min.js';
+        scriptTag.dataset.zone = '12159833';
+        scriptTag.src = 'https://nap5k.com/tag.min.js';
         scriptTag.async = true;
 
         div.appendChild(scriptTag);
@@ -281,7 +281,7 @@
             return;
         }
 
-        // Insere o bloco de anúncio no topo, acompanhando o filtro
+        // Insere o banner no topo, respeitando o filtro de pesquisa
         container.appendChild(criarSlotAnuncio());
 
         itens.forEach((item, index) => {
@@ -357,7 +357,7 @@
 
             container.appendChild(card);
 
-            // Insere o bloco de anúncio entre os cards filtrados
+            // Insere o banner entre os cards filtrados
             if (index < itens.length - 1) {
                 container.appendChild(criarSlotAnuncio());
             }
