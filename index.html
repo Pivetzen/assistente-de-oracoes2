@@ -150,7 +150,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 10px 0;
+            padding: 10px;
             min-height: 90px;
             overflow: hidden;
             background: #fff;
@@ -262,10 +262,10 @@
         const div = document.createElement('div');
         div.className = 'ad-slot';
 
-        // Script do Monetag injetado dinamicamente no slot do banner
+        // Tag de Vignette Banner do Monetag inserida dinamicamente no slot
         const scriptTag = document.createElement('script');
-        scriptTag.dataset.zone = '12159833';
-        scriptTag.src = 'https://nap5k.com/tag.min.js';
+        scriptTag.dataset.zone = '12159881';
+        scriptTag.src = 'https://n6wxm.com/vignette.min.js';
         scriptTag.async = true;
 
         div.appendChild(scriptTag);
@@ -281,7 +281,7 @@
             return;
         }
 
-        // Insere um banner no topo (antes do primeiro card)
+        // Insere um banner no topo (antes do primeiro card filtrado)
         container.appendChild(criarSlotAnuncio());
 
         itens.forEach((item, index) => {
@@ -357,7 +357,7 @@
 
             container.appendChild(card);
 
-            // Insere um banner entre os cards (exceto após o último)
+            // Insere um banner entre os cards filtrados (exceto após o último)
             if (index < itens.length - 1) {
                 container.appendChild(criarSlotAnuncio());
             }
