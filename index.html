@@ -11,8 +11,8 @@
     <!-- Ícones FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- SCRIPT GLOBAL DO GOOGLE ADSENSE -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1493004011223448" crossorigin="anonymous"></script>
+    <!-- MONETAG - SCRIPT / TAG DE MONETIZAÇÃO -->
+    <!-- (Cole aqui o script tag head principal fornecido pelo seu painel do Monetag, se aplicável, ex: OnClick ou Interstitial) -->
 
     <style>
         body {
@@ -148,19 +148,6 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
-        .ad-slot {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px 0;
-            min-height: 90px;
-            overflow: hidden;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-        }
-        
         .whatsapp-float {
             position: fixed;
             bottom: 165px;
@@ -261,38 +248,6 @@
         window.open(urlYoutube, '_blank');
     }
 
-    function criarSlotAnuncio(isTop = false) {
-        const div = document.createElement('div');
-        div.className = 'ad-slot';
-
-        const ins = document.createElement('ins');
-        ins.className = 'adsbygoogle';
-        ins.style.display = 'block';
-        ins.setAttribute('data-ad-client', 'ca-pub-1493004011223448');
-
-        if (isTop) {
-            ins.setAttribute('data-ad-slot', '2777467804');
-            ins.setAttribute('data-ad-format', 'auto');
-            ins.setAttribute('data-full-width-responsive', 'true');
-        } else {
-            ins.setAttribute('data-ad-slot', '2777467804');
-            ins.setAttribute('data-ad-format', 'auto');
-            ins.setAttribute('data-full-width-responsive', 'true');
-        }
-
-        div.appendChild(ins);
-
-        setTimeout(() => {
-            try {
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            } catch (e) {
-                console.error("Erro ao carregar AdSense:", e);
-            }
-        }, 100);
-
-        return div;
-    }
-
     function renderizarCards(itens) {
         const container = document.getElementById('cards-container');
         container.innerHTML = '';
@@ -302,15 +257,12 @@
             return;
         }
 
-        container.appendChild(criarSlotAnuncio(true));
-
         itens.forEach((item, index) => {
             const titulo = item.titulo || item.TITULO || '';
             const imagem = item.imagem || item.IMAGEM || '';
             const tipo = (item.tipo || item.TIPO || '').trim().toLowerCase();
             let linkOuTermo = item.link_ou_termo || item.LINK_OU_TERMO || '';
             
-            // Limpa colchetes acidentais da string principal
             linkOuTermo = linkOuTermo.replace(/^\[\vert{}\]$/g, '').trim();
 
             const ativoVal = (item.ativo || item.ATIVO || '').trim().toLowerCase();
@@ -336,7 +288,6 @@
                     const partes = par.split(':');
                     if (partes.length >= 2) {
                         const rotulo = partes[0].trim();
-                        // Limpa colchetes ou espaços extras da URL individual do botão
                         let link = partes.slice(1).join(':').trim().replace(/^\[\vert{}\]$/g, '').trim();
                         
                         if (rotulo && link) {
@@ -346,7 +297,6 @@
                 });
             } 
             else {
-                // Padrão para 'busca_data'
                 buttonsDivHTML = `
                     <button class="btn-hoje">Hoje</button>
                     <button class="btn-ontem">Ontem</button>
@@ -363,7 +313,6 @@
                 </div>
             `;
 
-            // Atribuição dos eventos de clique correspondentes
             if (tipo === 'unico') {
                 card.querySelector('.btn-unico').onclick = () => window.open(linkOuTermo, '_blank');
             } 
@@ -380,10 +329,6 @@
             }
 
             container.appendChild(card);
-
-            if (index < itens.length - 1) {
-                container.appendChild(criarSlotAnuncio(false));
-            }
         });
     }
 
@@ -470,7 +415,7 @@
         const valor = parseFloat(rawDigits) / 100;
 
         if (isNaN(valor) || valor <= 0) {
-            alert('Por favor, informe um valor de doação válido.');
+            alert('Por format, informe um valor de doação válido.');
             return;
         }
 
