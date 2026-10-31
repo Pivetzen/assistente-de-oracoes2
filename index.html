@@ -148,15 +148,22 @@
         .ad-slot {
             width: 100%;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 10px;
+            padding: 10px 0;
             min-height: 90px;
             overflow: hidden;
             background: #fff;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        .ad-iframe {
+            width: 100%;
+            max-width: 728px;
+            height: 90px;
+            border: none;
+            overflow: hidden;
         }
         
         .whatsapp-float {
@@ -259,27 +266,48 @@
         window.open(urlYoutube, '_blank');
     }
 
-    function criarSlotAnuncio(indexUnico) {
+    function criarSlotAnuncio() {
         const div = document.createElement('div');
         div.className = 'ad-slot';
 
-        // Para evitar conflito de ID duplicado do Adsterra, criamos apenas no primeiro bloco ou usamos tag nativa de script livre
-        if (indexUnico === 0) {
-            const adDiv = document.createElement('div');
-            adDiv.id = 'container-f4778be4d2573fb8efc5f74a1aa10f7a';
+        // Criação de iframe dinâmico para isolar a variável atOptions por slot
+        const iframe = document.createElement('iframe');
+        iframe.className = 'ad-iframe';
+        iframe.scrolling = 'no';
+        iframe.frameBorder = '0';
 
-            const scriptTag = document.createElement('script');
-            scriptTag.async = true;
-            scriptTag.setAttribute('data-cfasync', 'false');
-            scriptTag.src = 'https://bauval.org/21/f4778be4d2573fb8efc5f74a1aa10f7a';
+        div.appendChild(iframe);
 
-            div.appendChild(adDiv);
-            div.appendChild(scriptTag);
-        } else {
-            // Nos demais slots, podemos deixar limpo ou inserir um aviso/espaço reservado para não quebrar o script
-            div.innerHTML = `<span style="font-size:11px; color:#cbd5e1;">Espaço publicitário</span>`;
-        }
-        
+        // Injeta o script atOptions e o script do Adsterra dentro do iframe isolado
+        setTimeout(() => {
+            const iframeDoc = iframe.contentWindow || iframe.contentDocument.document || iframe.contentDocument;
+            const doc = iframeDoc.document || iframeDoc;
+            doc.open();
+            doc.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <style>
+                        body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; background: transparent; }
+                    </style>
+                </head>
+                <body>
+                    <script type="text/javascript">
+                        atOptions = {
+                            'key' : '18fae934ab77c252b43b423e7f17256e',
+                            'format' : 'iframe',
+                            'height' : 90,
+                            'width' : 728,
+                            'params' : {}
+                        };
+                    <\/script>
+                    <script type="text/javascript" src="https://bauval.org/22/18fae934ab77c252b43b423e7f17256e"><\/script>
+                </body>
+                </html>
+            `);
+            doc.close();
+        }, 50);
+
         return div;
     }
 
@@ -292,10 +320,8 @@
             return;
         }
 
-        let adCounter = 0;
-
-        // Insere o banner no topo
-        container.appendChild(criarSlotAnuncio(adCounter++));
+        // Insere um banner no topo
+        container.appendChild(criarSlotAnuncio());
 
         itens.forEach((item, index) => {
             const titulo = item.titulo || item.TITULO || '';
@@ -331,7 +357,7 @@
                         let link = partes.slice(1).join(':').trim().replace(/^\[\vert{}\]$/g, '').trim();
                         
                         if (rotulo && link) {
-                            buttonsDivHTML = buttonsDivHTML + `<button class="btn-multipla" data-link="${link}">${rotulo}</button>`;
+                            buttonsDivHTML += `<button class="btn-multipla" data-link="${link}">${rotulo}</button>`;
                         }
                     }
                 });
@@ -370,8 +396,9 @@
 
             container.appendChild(card);
 
+            // Insere um banner entre os cards
             if (index < itens.length - 1) {
-                container.appendChild(criarSlotAnuncio(adCounter++));
+                container.appendChild(criarSlotAnuncio());
             }
         });
     }
