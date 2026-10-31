@@ -148,6 +148,7 @@
         .ad-slot {
             width: 100%;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 10px;
@@ -225,7 +226,7 @@
             <div class="relative flex-grow">
                 <input type="text" id="inputValorDoacao" value="Digite um valor..." inputmode="decimal" pattern="[0-9]*" oninput="mascaraMoeda(this)" class="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-semibold text-slate-800 text-center focus:outline-none focus:ring-2 focus:ring-emerald-500">
             </div>
-            <button onclick="gerarECopiarPixDoacao()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-3.5 py-2 rounded-lg text-xs transition flex items-center justify-center gap-1 cursor-pointer shadow-sm shrink-0 whitespace-nowrap">
+            <button onclick="gerarECopiarPixDoacao()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-3.5 py-2 rounded-xs text-xs transition flex items-center justify-center gap-1 cursor-pointer shadow-sm shrink-0 whitespace-nowrap">
                 <i class="fa-regular fa-copy"></i> Copiar Pix
             </button>
         </div>
@@ -262,13 +263,19 @@
         const div = document.createElement('div');
         div.className = 'ad-slot';
 
-        // Inserção da tag In-Page Banner do Monetag dentro do elemento estático
-        const scriptTag = document.createElement('script');
-        scriptTag.dataset.zone = '12159833';
-        scriptTag.src = 'https://nap5k.com/tag.min.js';
-        scriptTag.async = true;
+        // Criação do elemento container com o ID específico do anúncio
+        const adDiv = document.createElement('div');
+        adDiv.id = 'container-f4778be4d2573fb8efc5f74a1aa10f7a';
 
+        // Criação do script de carregamento do anúncio estático
+        const scriptTag = document.createElement('script');
+        scriptTag.async = true;
+        scriptTag.setAttribute('data-cfasync', 'false');
+        scriptTag.src = 'https://bauval.org/21/f4778be4d2573fb8efc5f74a1aa10f7a';
+
+        div.appendChild(adDiv);
         div.appendChild(scriptTag);
+        
         return div;
     }
 
@@ -281,7 +288,7 @@
             return;
         }
 
-        // Insere o banner no topo, respeitando o filtro de pesquisa
+        // Insere o banner estático no topo, respeitando o filtro de pesquisa
         container.appendChild(criarSlotAnuncio());
 
         itens.forEach((item, index) => {
@@ -357,7 +364,7 @@
 
             container.appendChild(card);
 
-            // Insere o banner entre os cards filtrados
+            // Insere o banner estático entre os cards filtrados
             if (index < itens.length - 1) {
                 container.appendChild(criarSlotAnuncio());
             }
@@ -435,7 +442,7 @@
         return payload + crc16(payload);
     }
 
-    function gerarECopiarPixDoacao() {
+    functiongerECopiarPixDoacao = function() {
         const inputElement = document.getElementById('inputValorDoacao');
         let rawDigits = inputElement.value.replace(/\D/g, "");
         
@@ -457,6 +464,37 @@
             const msg = document.getElementById('msgSucessoPix');
             if (msg) {
                 msg.classList.remove('hidden');
+                setTimeout(() => {
+                    msg.classList.add('hidden');
+                }, 5000);
+            }
+        }).catch(err => {
+            alert('Não foi possível copiar automaticamente. Tente novamente.');
+        });
+    }
+
+    function gerarECopiarPixDoacao() {
+        const inputElement = document.getElementById('inputValorDoacao');
+        let rawDigits = inputElement.value.replace(/\D/g, "");
+        
+        if (!rawDigits || rawDigits === "00") {
+            alert('Por favor, informe um valor de doação válido.');
+            return;
+        }
+
+        const valor = parseFloat(rawDigits) / 100;
+
+        if (isNaN(valor) || valor <= 0) {
+            alert('Por favor, informe um valor de doação válido.');
+            return;
+        }
+
+        const pixPayload = gerarPayloadPix(CHAVE_PIX_RECEPTOR, NOME_RECEPTOR, CIDADE_RECEPTOR, valor);
+
+        navigator.clipboard.writeText(pixPayload).then(() => {
+            const msg = document.getElementById('msgSucessoPix');
+            if (msg) {
+                msg.classList.0 && msg.classList.remove('hidden');
                 setTimeout(() => {
                     msg.classList.add('hidden');
                 }, 5000);
