@@ -262,7 +262,7 @@
         const div = document.createElement('div');
         div.className = 'ad-slot';
 
-        // Tag de Vignette Banner do Monetag inserida dinamicamente no slot
+        // Injetando o script do Monetag diretamente para preencher o bloco estático
         const scriptTag = document.createElement('script');
         scriptTag.dataset.zone = '12159881';
         scriptTag.src = 'https://n6wxm.com/vignette.min.js';
@@ -281,7 +281,7 @@
             return;
         }
 
-        // Insere um banner no topo (antes do primeiro card filtrado)
+        // Insere o bloco de anúncio no topo, acompanhando o filtro
         container.appendChild(criarSlotAnuncio());
 
         itens.forEach((item, index) => {
@@ -357,7 +357,7 @@
 
             container.appendChild(card);
 
-            // Insere um banner entre os cards filtrados (exceto após o último)
+            // Insere o bloco de anúncio entre os cards filtrados
             if (index < itens.length - 1) {
                 container.appendChild(criarSlotAnuncio());
             }
