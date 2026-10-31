@@ -10,9 +10,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- Ícones FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- MONETAG - SCRIPT / TAG DE MONETIZAÇÃO -->
-    <!-- (Cole aqui o script tag head principal fornecido pelo seu painel do Monetag, se aplicável, ex: OnClick ou Interstitial) -->
 
     <style>
         body {
@@ -148,6 +145,19 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
+        .ad-slot {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 0;
+            min-height: 90px;
+            overflow: hidden;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+        
         .whatsapp-float {
             position: fixed;
             bottom: 165px;
@@ -248,6 +258,20 @@
         window.open(urlYoutube, '_blank');
     }
 
+    function criarSlotAnuncio() {
+        const div = document.createElement('div');
+        div.className = 'ad-slot';
+
+        // Script do Monetag injetado dinamicamente no slot do banner
+        const scriptTag = document.createElement('script');
+        scriptTag.dataset.zone = '12159833';
+        scriptTag.src = 'https://nap5k.com/tag.min.js';
+        scriptTag.async = true;
+
+        div.appendChild(scriptTag);
+        return div;
+    }
+
     function renderizarCards(itens) {
         const container = document.getElementById('cards-container');
         container.innerHTML = '';
@@ -256,6 +280,9 @@
             container.innerHTML = '<p style="text-align:center;">Nenhum card encontrado.</p>';
             return;
         }
+
+        // Insere um banner no topo (antes do primeiro card)
+        container.appendChild(criarSlotAnuncio());
 
         itens.forEach((item, index) => {
             const titulo = item.titulo || item.TITULO || '';
@@ -329,6 +356,11 @@
             }
 
             container.appendChild(card);
+
+            // Insere um banner entre os cards (exceto após o último)
+            if (index < itens.length - 1) {
+                container.appendChild(criarSlotAnuncio());
+            }
         });
     }
 
@@ -415,7 +447,7 @@
         const valor = parseFloat(rawDigits) / 100;
 
         if (isNaN(valor) || valor <= 0) {
-            alert('Por format, informe um valor de doação válido.');
+            alert('Por favor, informe um valor de doação válido.');
             return;
         }
 
