@@ -145,22 +145,33 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
-        /* Slot de anúncio limpo, sem fundo branco ou borda */
-        .ad-slot {
+        /* Container do Banner de Anúncios Próprios */
+        .ad-banner-slot {
             width: 100%;
+            max-width: 600px;
+            margin: 5px 0;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 5px 0;
-            overflow: hidden;
-            background: transparent;
         }
 
-        .ad-iframe {
-            width: 320px;
-            height: 50px;
-            border: none;
-            overflow: hidden;
+        .ad-banner-slot a {
+            display: block;
+            width: 100%;
+            text-decoration: none;
+        }
+
+        .ad-banner-slot img {
+            width: 100%;
+            max-height: 120px;
+            object-fit: cover;
+            display: block;
+            transition: opacity 0.3s ease-in-out;
         }
         
         .whatsapp-float {
@@ -243,13 +254,56 @@
 </footer>
 
 <script>
+    // URL da aba de Orações (DATA)
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRUImoAtZ4E2g_fLMqCTh4lxQyAOLaHidHq6yIITwLOHL2s1TROu866CksJmtWvrFLnGrWHbCzKMiY4/pub?gid=0&single=true&output=csv';
+    
+    // ID da Planilha e GID da aba de Anúncios
+    const SPREADSHEET_ID = '1v82xBIs62cUuD5zungK7HQN1Ms6Kry7Pi9tC9j4GBmk';
+    const ANUNCIOS_GID = '285181431'; // ⚠️ Substitua pelo GID real da sua aba "Anuncios" obtido na URL
+    const ADS_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv&gid=${ANUNCIOS_GID}&t=${Date.now()}`;
     
     const CHAVE_PIX_RECEPTOR = "matheuzzu@hotmail.com";
     const NOME_RECEPTOR = "MATHEUS ARRUDA MAIA";
     const CIDADE_RECEPTOR = "FORTALEZA";
 
     let todosItens = [];
+    let todosAnuncios = [];
+    let adPointers = [];
+
+    function buildAbsoluteURL(rawPath) {
+        if (!rawPath) return '';
+        if (rawPath.startsWith('http://') || rawPath.startsWith('https://')) {
+            return rawPath;
+        }
+        let cleanPath = rawPath.replace(/^["'\/]+|["'\s]+$/g, '');
+        let basePath = window.location.origin + window.location.pathname;
+        if (!basePath.endsWith('/')) {
+            basePath += '/';
+        }
+        return basePath + cleanPath;
+    }
+
+    async function carregarAnuncios() {
+        try {
+            const response = await fetch(ADS_URL, { cache: "no-store" });
+            if (!response.ok) return;
+            const csvText = await response.text();
+            
+            const parsed = Papa.parse(csvText, { header: true, skipEmptyLines: true });
+            const data = parsed.data || [];
+
+            todosAnuncios = data.filter(row => {
+                const img = row.ImagemBanner || row.imagembanner || row.IMAGEMBANNER || '';
+                return img.trim() !== '';
+            }).map(row => ({
+                ImagemBanner: (row.ImagemBanner || row.imagembanner || '').trim(),
+                LinkDestino: (row.LinkDestino || row.linkdestino || '#').trim(),
+                AltText: (row.AltText || row.alttext || 'Propaganda').trim()
+            }));
+        } catch (e) {
+            console.error("Erro ao carregar anúncios da planilha:", e);
+        }
+    }
 
     function buscar(termo, periodo) {
         const data = new Date();
@@ -263,45 +317,45 @@
         window.open(urlYoutube, '_blank');
     }
 
-    function criarSlotAnuncio() {
+    function criarSlotAnuncio(slotIndex) {
+        if (!todosAnuncios || todosAnuncios.length === 0) return null;
+
         const div = document.createElement('div');
-        div.className = 'ad-slot';
+        div.className = 'ad-banner-slot';
 
-        const iframe = document.createElement('iframe');
-        iframe.className = 'ad-iframe';
-        iframe.scrolling = 'no';
-        iframe.frameBorder = '0';
+        const a = document.createElement('a');
+        a.target = '_blank';
+        a.rel = 'noopener';
 
-        div.appendChild(iframe);
+        const img = document.createElement('img');
+        a.appendChild(img);
+        div.appendChild(a);
 
-        setTimeout(() => {
-            const iframeDoc = iframe.contentWindow || iframe.contentDocument.document || iframe.contentDocument;
-            const doc = iframeDoc.document || iframeDoc;
-            doc.open();
-            doc.write(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <style>
-                        body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; background: transparent; overflow: hidden; }
-                    </style>
-                </head>
-                <body>
-                    <script type="text/javascript">
-                        atOptions = {
-                            'key' : '4c23cc12768744e07619afbfd9d2b10f',
-                            'format' : 'iframe',
-                            'height' : 50,
-                            'width' : 320,
-                            'params' : {}
-                        };
-                    <\/script>
-                    <script type="text/javascript" src="https://bauval.org/22/4c23cc12768744e07619afbfd9d2b10f"><\/script>
-                </body>
-                </html>
-            `);
-            doc.close();
-        }, 50);
+        let initialIndex = slotIndex % todosAnuncios.length;
+        adPointers[slotIndex] = initialIndex;
+
+        function updateSlot(index) {
+            const ad = todosAnuncios[index];
+            if (!ad) return;
+
+            img.style.opacity = '0';
+            setTimeout(() => {
+                a.href = ad.LinkDestino || '#';
+                a.title = ad.AltText || 'Propaganda';
+                img.src = buildAbsoluteURL(ad.ImagemBanner);
+                img.alt = ad.AltText || 'Propaganda';
+                img.style.opacity = '1';
+            }, 150);
+        }
+
+        updateSlot(initialIndex);
+
+        if (todosAnuncios.length > 1) {
+            setInterval(() => {
+                adPointers[slotIndex] = (adPointers[slotIndex] + 1) % todosAnuncios.length;
+                updateSlot(adPointers[slotIndex]);
+            }, 6000);
+        }
 
         return div;
     }
@@ -309,13 +363,16 @@
     function renderizarCards(itens) {
         const container = document.getElementById('cards-container');
         container.innerHTML = '';
+        adPointers = [];
 
         if (!itens || itens.length === 0) {
             container.innerHTML = '<p style="text-align:center;">Nenhum card encontrado.</p>';
             return;
         }
 
-        container.appendChild(criarSlotAnuncio());
+        let slotCounter = 0;
+        const primeiroAd = criarSlotAnuncio(slotCounter++);
+        if (primeiroAd) container.appendChild(primeiroAd);
 
         itens.forEach((item, index) => {
             const titulo = item.titulo || item.TITULO || '';
@@ -391,7 +448,8 @@
             container.appendChild(card);
 
             if (index < itens.length - 1) {
-                container.appendChild(criarSlotAnuncio());
+                const adSlot = criarSlotAnuncio(slotCounter++);
+                if (adSlot) container.appendChild(adSlot);
             }
         });
     }
@@ -413,6 +471,8 @@
     async function carregarCards() {
         const container = document.getElementById('cards-container');
         
+        await carregarAnuncios();
+
         Papa.parse(CSV_URL, {
             download: true,
             header: true,
